@@ -2,7 +2,7 @@
 /**
  * @copyright   Copyright (C) 2019-2020 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     2020-04-09 16:58:14
+ * @version     2020-10-20 13:57:36
  *
  * Localized data
  */
@@ -104,7 +104,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IzLicense/Attribute:documents_list+' => 'Documents related to this license',
 	'Class:IzLicense/Attribute:installations_list' => 'Licensed devices',
 	'Class:IzLicense/Attribute:installations_list+' => 'Devices using this license',
-	'Class:IzLicense/Attribute:unique_license_per_org' => 'The combination of the license name and organization must be unique.',
+	'Class:IzLicense/UniquenessRule:unique_license_per_org' => 'The combination of the license name and organization must be unique.',
 		
 	'Class:lnkIzLicenseToContact' => 'Link License / Contact',
 	'Class:lnkIzLicenseToContact+' => 'Link between License and Contact',
