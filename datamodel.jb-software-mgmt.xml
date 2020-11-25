@@ -271,7 +271,7 @@
 						<!-- Obscure iTop issue: "failed to create alias" if you use functionalci_id_friendlyname -->
 						<attribute id="softwareversion_friendlyname"/>
 						<attribute id="functionalci_name"/>
-						<attribute id="org_id"/>
+						<attribute id="organization_name"/>
 					</attributes>
 				</naming>
 				<order>
