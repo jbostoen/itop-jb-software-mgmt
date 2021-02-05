@@ -41,8 +41,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IzSoftwareVersion/Attribute:software_id+' => 'Software name',
 	'Class:IzSoftwareVersion/Attribute:version' => 'Version',
 	'Class:IzSoftwareVersion/Attribute:version+' => 'Version of this software. Could be a name, major/minor version, build number, ...',
-	'Class:IzSoftwareVersion/attribute:installations_list' => 'Installations',
-	'Class:IzSoftwareVersion/attribute:installations_list+' => 'Installations of this software version on physical or virtual devices',
+	'Class:IzSoftwareVersion/Attribute:installations_list' => 'Installations',
+	'Class:IzSoftwareVersion/Attribute:installations_list+' => 'Installations of this software version on physical or virtual devices',
 	'Class:IzSoftwareVersion/UniquenessRule:unique_software_version' => 'The combination of a software (name) and version must be unique.',
 	
 	'Class:IzSoftwareInstallation' => 'Software Installation',
@@ -109,18 +109,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIzLicenseToContact' => 'Link License / Contact',
 	'Class:lnkIzLicenseToContact+' => 'Link between License and Contact',
 	'Class:lnkIzLicenseToContact/Name' => '%1$s | %2$s',
-	'Class:lnkIzLicenseToContact/attribute:izlicense_id' => 'License',
-	'Class:lnkIzLicenseToContact/attribute:izlicense_id+' => 'License',
+	'Class:lnkIzLicenseToContact/Attribute:izlicense_id' => 'License',
+	'Class:lnkIzLicenseToContact/Attribute:izlicense_id+' => 'License',
 	'Class:lnkIzLicenseToContact/Attribute:contact_id' => 'Contact',
 	'Class:lnkIzLicenseToContact/Attribute:contact_id+' => 'Contact. Likely a Person, but could also be a Team.',
 	'Class:lnkIzLicenseToContact/Attribute:comment' => 'Comment',
 	'Class:lnkIzLicenseToContact/Attribute:comment+' => 'Comment. Reason of installation, downgrade rights, ... could be logged here.',
 		
 	'Class:IzDatabaseSchema' => 'Database Schema',
-	'Class:IzDatabaseSchema/attribute:izsoftwareinstallation_id' => 'Software installation',
+	'Class:IzDatabaseSchema/Attribute:izsoftwareinstallation_id' => 'Software installation',
 	
 	'Class:IzWebApplication' => 'Web Application',
-	'Class:IzWebApplication/attribute:izsoftwareinstallation_id' => 'Software installation',
+	'Class:IzWebApplication/Attribute:izsoftwareinstallation_id' => 'Software installation',
 	'Class:IzWebApplication/Attribute:url' => 'URL',
 	
 	
