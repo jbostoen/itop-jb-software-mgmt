@@ -138,6 +138,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareLicence' => 'Software Licence (original)',
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Software Instance (original) / Software Patch',
 	'Class:DatabaseSchema' => 'Database Schema (original)',
+	'Class:WebApplication' => 'Web Application (original)',
 	
 ));
 
