@@ -15,21 +15,22 @@ Please get in touch to discuss the terms: **info@jeffreybostoen.be** / https://j
 A different implementation of software and license management.
 
 This aims to replace the regular iTop Software Catalog and Software instances.
-It will NOT remove the data by default; but it will make old info invisible for the users.
+It will NOT delete the existing data from the database by default; but it will make the old info invisible for the users.
 
 The idea is to implement better software management:
-* the software name could be something generic ("MS Office") or a bit more specific ("MS Office 2019")
-* more detailed version info could be set on the software instance
-* licenses could be linked to users, devices and/or software instance
-  * this covers downgrade rights, as you can now link for example a "Windows Server 2019 Standard" license to both "Windows Server 2019 Standard" and "Windows Server 2016 Standard"
-  * this covers usage rights, such as "Windows Server User CAL"
+* The software name could be something generic ("MS Office") or a only slightly more specific ("MS Office 2019").
+* More detailed version info could be set on the software instance.
+* Licenses could be linked to users, devices and/or software instances.
+  * This covers downgrade rights.  
+    With this extension, you can link a "Microsoft Windows Server 2019 Standard" license to both "Microsoft Windows Server 2019 Standard" and "Microsoft Windows Server 2016 Standard".
+  * This covers usage rights, such as "Microsoft Windows Server User CAL".
   
-Caution: influences all the classes listed below.
+Caution: Installing this extension affects all the classes listed below.
 Except for FunctionalCI, they all get ```( original)``` appended to their class name (label) in iTop.
 
 * FunctionalCI
-  * replaces Software list (AttributeLinkedSet): SoftwareInstance -> izSoftwareInstallation
-  * replaces neighbour "SoftwareInstance" with izSoftwareInstallation
+  * Replaces Software list (AttributeLinkedSet): SoftwareInstance -> JBSoftwareInstallation.
+  * Replaces neighbour "SoftwareInstance" with JBSoftwareInstallation.
 
 * DatabaseSchema
 * Patch
@@ -44,14 +45,8 @@ Except for FunctionalCI, they all get ```( original)``` appended to their class 
 * WebApplication
 
 
-## Cookbook
-
-XML:
-* new classes
-* replacing existing fields/relationships
-
 ## Todo
-* DatabaseSchema => original DBServer
-* Izsoftwareinstallation => parent 'FunctionalCI'
+* DatabaseSchema => Original DBServer
+* JBsoftwareinstallation => parent 'FunctionalCI'
 
 

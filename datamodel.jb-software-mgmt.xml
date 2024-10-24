@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
 	<!-- 
  * @copyright   Copyright (c) 2019-2023 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -7,11 +7,11 @@
 -->
 	<classes>
 
-		<!-- Simply overrule softwares_list on FunctionalCI -->
+		<!-- Override the existing softwares_list on FunctionalCI -->
 		<class id="FunctionalCI">
 			<fields>
-				<field id="softwares_list" xsi:type="AttributeLinkedSet">
-					<linked_class _delta="redefine">IzSoftwareInstallation</linked_class>
+				<field id="softwares_list" xsi:type="AttributeLinkedSet" _delta="if_exists">
+					<linked_class _delta="redefine">JBSoftwareInstallation</linked_class>
 					<ext_key_to_me _delta="redefine">functionalci_id</ext_key_to_me>
 					<edit_mode _delta="redefine">add_only</edit_mode>
 				</field>
@@ -20,8 +20,8 @@
 				<relation id="impacts">
 					<neighbours>
 						<!-- Not really required since it refers to the same attribute, but still. -->
-						<neighbour id="softwareinstance" _delta="delete"/>
-						<neighbour id="izsoftwareinstallation" _delta="define">
+						<neighbour id="softwareinstance" _delta="delete_if_exists"/>
+						<neighbour id="jbsoftwareinstallation" _delta="define">
 							<attribute>softwares_list</attribute>
 						</neighbour>
 					</neighbours>
@@ -29,13 +29,13 @@
 			</relations>
 		</class>
 		
-		<class id="IzSoftware" _delta="define">
+		<class id="JBSoftware" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
 				<category>bizmodel,searchable,structure</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>izsoftware</db_table>
+				<db_table>jbsoftware</db_table>
 				<db_key_field>id</db_key_field>
 				<naming>
 					<attributes>
@@ -74,11 +74,20 @@
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="type" xsi:type="AttributeEnum">
+					<sort_type>label</sort_type>
 					<values>
-						<value id="client_software">client_software</value>
-						<value id="cloud_software">cloud_software</value>
-						<value id="server_software">server_software</value>
-						<value id="operating_system">operating_system</value>
+						<value id="client_software">
+							<code>client_software</code>
+						</value>
+						<value id="cloud_software">
+							<code>cloud_software</code>
+						</value>
+						<value id="server_software">
+							<code>server_software</code>
+						</value>
+						<value id="operating_system">
+							<code>operating_system</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value/>
@@ -86,7 +95,7 @@
 					<display_style>list</display_style>
 				</field>
 				<field id="versions_list" xsi:type="AttributeLinkedSet">
-					<linked_class>IzSoftwareVersion</linked_class>
+					<linked_class>JBSoftwareVersion</linked_class>
 					<ext_key_to_me>software_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
@@ -149,13 +158,13 @@
 		</class>
 
 
-		<class id="IzSoftwareVersion" _delta="define">
+		<class id="JBSoftwareVersion" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
 				<category>bizmodel,searchable,structure</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>izsoftwareversion</db_table>
+				<db_table>jbsoftwareversion</db_table>
 				<db_key_field>id</db_key_field>
 				<naming>
 					<attributes>
@@ -191,7 +200,7 @@
 					<sql>software_id</sql>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>IzSoftware</target_class>
+					<target_class>JBSoftware</target_class>
 					<allow_target_creation>true</allow_target_creation>
 				</field>
 				<field id="software_id_friendlyname" xsi:type="AttributeExternalField">
@@ -204,7 +213,7 @@
 					<is_null_allowed>true</is_null_allowed>					
 				</field>
 				<field id="installations_list" xsi:type="AttributeLinkedSet">
-					<linked_class>IzSoftwareInstallation</linked_class>
+					<linked_class>JBSoftwareInstallation</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
@@ -257,13 +266,13 @@
 			</presentation>
 		</class>
 
-		<class id="IzSoftwareInstallation" _delta="define">
+		<class id="JBSoftwareInstallation" _delta="define">
 			<parent>FunctionalCI</parent>
 			<properties>
 				<category>bizmodel,searchable</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>izsoftwareinstallation</db_table>
+				<db_table>jbsoftwareinstallation</db_table>
 				<db_key_field>id</db_key_field>
 				<db_final_class_field/>
 				<naming>
@@ -300,7 +309,7 @@
 			</properties>
 			<fields>
 				<!-- 2020-02-18: 
-					It might be interesting to have a dependency for FunctionalCI and IzSoftwareVersion to share the same org_id.
+					It might be interesting to have a dependency for FunctionalCI and JBSoftwareVersion to share the same org_id.
 					However, some organizations may share a license.
 				-->
 				<field id="functionalci_id" xsi:type="AttributeExternalKey">
@@ -318,7 +327,7 @@
 					<sql>softwareversion_id</sql>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>IzSoftwareVersion</target_class>
+					<target_class>JBSoftwareVersion</target_class>
 				</field>
 				<field id="softwareversion_friendlyname" xsi:type="AttributeExternalField">
 					<extkey_attcode>softwareversion_id</extkey_attcode>
@@ -329,7 +338,7 @@
 					<!-- Not all software has a license -->
 					<is_null_allowed>true</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>IzLicense</target_class>
+					<target_class>JBLicense</target_class>
 					<!-- Don't apply this filter, otherwise "downgrade" rights won't work. -->
 					<!-- <filter>SELECT izLicense WHERE softwareversion_id = :this->softwareversion_id</filter> -->
 					<dependencies>
@@ -348,9 +357,15 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<sql>status</sql>
 					<values>
-						<value id="implementation">implementation</value>
-						<value id="obsolete">obsolete</value>
-						<value id="production">production</value>
+						<value id="implementation">
+							<code>implementation</code>
+						</value>
+						<value id="obsolete">
+							<code>obsolete</code>
+						</value>
+						<value id="production">
+							<code>production</code>
+						</value>
 					</values>
 					<is_null_allowed>true</is_null_allowed>
 				</field>
@@ -520,13 +535,13 @@
 
 
 
-		<class id="IzLicense" _delta="define">
+		<class id="JBLicense" _delta="define">
 			<parent>FunctionalCI</parent>
 			<properties>
 				<category>bizmodel,searchable,structure</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>izlicense</db_table>
+				<db_table>jblicense</db_table>
 				<db_key_field>id</db_key_field>
 				<naming>
 					<attributes>
@@ -567,7 +582,7 @@
 					<sql>softwareversion_id</sql>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>IzSoftwareVersion</target_class>
+					<target_class>JBSoftwareVersion</target_class>
 				</field>
 				<field id="comment" xsi:type="AttributeHTML">
 					<sql>comment</sql>
@@ -588,10 +603,18 @@
 				</field>
 				<field id="type" xsi:type="AttributeEnum">
 					<values>
-						<value id="single_user">single_user</value>
-						<value id="concurrent_user">concurrent_user</value>
-						<value id="organization">organization</value>
-						<value id="device">device</value>
+						<value id="named_user">
+							<code>named_user</code>
+						</value>
+						<value id="concurrent_user">
+							<code>concurrent_user</code>
+						</value>
+						<value id="organization">
+							<code>organization</code>
+						</value>
+						<value id="device">
+							<code>device</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value/>
@@ -600,9 +623,15 @@
 				</field>
 				<field id="purchase_type" xsi:type="AttributeEnum">
 					<values>
-						<value id="one_time">one_time</value>
-						<value id="limited">limited</value>
-						<value id="autorenewal">autorenewal</value>
+						<value id="one_time">
+							<code>one_time</code>
+						</value>
+						<value id="limited">
+							<code>limited</code>
+						</value>
+						<value id="autorenewal">
+							<code>autorenewal</code>
+						</value>
 					</values>
 					<sql>purchase_type</sql>
 					<default_value/>
@@ -619,7 +648,7 @@
 					<default_value/>
 				</field>
 				<field id="installations_list" xsi:type="AttributeLinkedSet">
-					<linked_class>IzSoftwareInstallation</linked_class>
+					<linked_class>JBSoftwareInstallation</linked_class>
 					<ext_key_to_me>license_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
@@ -801,13 +830,13 @@
 			</presentation>
 		</class>
 
-		<class id="IzDatabaseSchema" _delta="define">
+		<class id="JBDatabaseSchema" _delta="define">
 			<parent>FunctionalCI</parent>
 			<properties>
 				<category>bizmodel,searchable</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>izdatabaseschema</db_table>
+				<db_table>jbdatabaseschema</db_table>
 				<db_key_field>id</db_key_field>
 				<db_final_class_field/>
 				<naming>
@@ -826,14 +855,14 @@
 				</reconciliation>
 			</properties>
 			<fields>
-				<field id="izsoftwareinstallation_id" xsi:type="AttributeExternalKey">
-					<sql>izsoftwareinstallation_id</sql>
-					<target_class>IzSoftwareInstallation</target_class>
+				<field id="jbsoftwareinstallation_id" xsi:type="AttributeExternalKey">
+					<sql>jbsoftwareinstallation_id</sql>
+					<target_class>JBSoftwareInstallation</target_class>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_MANUAL</on_target_delete>
 				</field>
-				<field id="izsoftwareinstallation_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>izsoftwareinstallation_id</extkey_attcode>
+				<field id="jbsoftwareinstallation_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>jbsoftwareinstallation_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
 			</fields>
@@ -846,7 +875,7 @@
 						<item id="org_id">
 							<rank>20</rank>
 						</item>
-						<item id="izsoftwareinstallation_id">
+						<item id="jbsoftwareinstallation_id">
 							<rank>30</rank>
 						</item>
 						<item id="business_criticity">
@@ -880,7 +909,7 @@
 						<item id="friendlyname">
 							<rank>10</rank>
 						</item>
-						<item id="izsoftwareinstallation_id">
+						<item id="jbsoftwareinstallation_id">
 							<rank>20</rank>
 						</item>
 						<item id="org_id">
@@ -922,13 +951,13 @@
 		</class>
 
 
-		<class id="IzWebApplication" _delta="define">
+		<class id="JBWebApplication" _delta="define">
 			<parent>FunctionalCI</parent>
 			<properties>
 				<category>bizmodel,searchable</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>izwebapplication</db_table>
+				<db_table>jbwebapplication</db_table>
 				<db_key_field>id</db_key_field>
 				<db_final_class_field/>
 				<naming>
@@ -947,14 +976,14 @@
 				</reconciliation>
 			</properties>
 			<fields>
-				<field id="izsoftwareinstallation_id" xsi:type="AttributeExternalKey">
-					<sql>izsoftwareinstallation_id</sql>
-					<target_class>IzSoftwareInstallation</target_class>
+				<field id="jbsoftwareinstallation_id" xsi:type="AttributeExternalKey">
+					<sql>jbsoftwareinstallation_id</sql>
+					<target_class>JBSoftwareInstallation</target_class>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_MANUAL</on_target_delete>
 				</field>
-				<field id="izsoftwareinstallation_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>izsoftwareinstallation_id</extkey_attcode>
+				<field id="jbsoftwareinstallation_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>jbsoftwareinstallation_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
 				<field id="url" xsi:type="AttributeURL">
@@ -973,7 +1002,7 @@
 						<item id="org_id">
 							<rank>20</rank>
 						</item>
-						<item id="izsoftwareinstallation_id">
+						<item id="jbsoftwareinstallation_id">
 							<rank>30</rank>
 						</item>
 						<item id="url">
@@ -1010,7 +1039,7 @@
 						<item id="friendlyname">
 							<rank>10</rank>
 						</item>
-						<item id="izsoftwareinstallation_id">
+						<item id="jbsoftwareinstallation_id">
 							<rank>20</rank>
 						</item>
 						<item id="org_id">
@@ -1064,40 +1093,40 @@
 							<!-- Avoid re-using official dashlet IDs -->
 							<dashlet id="sw_1" xsi:type="DashletBadge" _delta="define">
 								<rank>1.1</rank>
-								<class>IzSoftware</class>
+								<class>JBSoftware</class>
 							</dashlet>
 							<dashlet id="sw_2" xsi:type="DashletBadge" _delta="define">
 								<rank>1.2</rank>
-								<class>IzSoftwareVersion</class>
+								<class>JBSoftwareVersion</class>
 							</dashlet>
 							<dashlet id="sw_3" xsi:type="DashletBadge" _delta="define">
 								<rank>1.3</rank>
-								<class>IzSoftwareInstallation</class>
+								<class>JBSoftwareInstallation</class>
 							</dashlet>
 							<dashlet id="sw_4" xsi:type="DashletBadge" _delta="define">
 								<rank>1.4</rank>
-								<class>IzLicense</class>
+								<class>JBLicense</class>
 							</dashlet>
 							<dashlet id="sw_5" xsi:type="DashletBadge" _delta="define">
 								<rank>1.54</rank>
-								<class>IzDatabaseSchema</class>
+								<class>JBDatabaseSchema</class>
 							</dashlet>
 							<dashlet id="sw_6" xsi:type="DashletBadge" _delta="define">
 								<rank>1.6</rank>
-								<class>IzWebApplication</class>
+								<class>JBWebApplication</class>
 							</dashlet>
 
-							<!-- Remove traditional items from overview -->
-							<dashlet id="5" xsi:type="DashletBadge" _delta="delete"/><!-- Middleware -->
-							<dashlet id="6" xsi:type="DashletBadge" _delta="delete"/><!-- DBServer -->
-							<dashlet id="7" xsi:type="DashletBadge" _delta="delete"/><!-- WebServer -->
-							<dashlet id="8" xsi:type="DashletBadge" _delta="delete"/><!-- PCSoftware -->
-							<dashlet id="9" xsi:type="DashletBadge" _delta="delete"/><!-- OtherSoftware -->
-							<dashlet id="10" xsi:type="DashletBadge" _delta="delete"/><!-- MiddlewareInstance -->
-							<dashlet id="11" xsi:type="DashletBadge" _delta="delete"/><!-- DatabaseSchema -->
-							<dashlet id="12" xsi:type="DashletBadge" _delta="delete"/><!-- WebApplication -->
+							<!-- Remove traditional items from overview. Unfortunately, the ID is a number. -->
+							<dashlet id="5" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Middleware -->
+							<dashlet id="6" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- DBServer -->
+							<dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- WebServer -->
+							<dashlet id="8" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- PCSoftware -->
+							<dashlet id="9" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- OtherSoftware -->
+							<dashlet id="10" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- MiddlewareInstance -->
+							<dashlet id="11" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- DatabaseSchema -->
+							<dashlet id="12" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- WebApplication -->
 							<!-- 13 = Patch (?) -->
-							<dashlet id="14" xsi:type="DashletBadge" _delta="delete"/><!-- Licence -->
+							<dashlet id="14" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Licence -->
 
 						</dashlets>
 					</cell>
@@ -1106,7 +1135,7 @@
 		</menu>
 
 		<!-- Remove traditional Software catalog menu. More items must be deleted. -->
-		<menu id="Software" xsi:type="OQLMenuNode" _delta="delete"/>
+		<menu id="Software" xsi:type="OQLMenuNode" _delta="delete_if_exists"/>
 	</menus>
 
 

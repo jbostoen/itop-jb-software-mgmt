@@ -20,7 +20,7 @@ SetupWebPage::AddModule(
                 // Setup
                 //
                 'dependencies' => array( 
-					'itop-config-mgmt/2.7.0',
+			'itop-config-mgmt/2.7.0',
                 ),
                 'mandatory' => false,
                 'visible' => true,
@@ -28,16 +28,16 @@ SetupWebPage::AddModule(
                 // Components
                 //
                 'datamodel' => array(
-					'model.jb-software-mgmt.php'
+			'model.jb-software-mgmt.php'
                 ),
                 'webservice' => array(
 
                 ),
                 'data.struct' => array(
-					// add your 'structure' definition XML files here,
+		        // add your 'structure' definition XML files here,
                 ),
                 'data.sample' => array(
-					// add your sample data XML files here,
+			// add your sample data XML files here,
                 ),
 
                 // Documentation
