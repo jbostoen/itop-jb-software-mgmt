@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @copyright   Copyright (c) 2019-2023 Jeffrey Bostoen
+ * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     2.7.230522
+ * @version     3.2.260623
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
         __FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-        'jb-software-mgmt/2.7.230522',
+        'jb-software-mgmt/3.2.260623',
         array(
                 // Identification
                 //
@@ -20,7 +20,7 @@ SetupWebPage::AddModule(
                 // Setup
                 //
                 'dependencies' => array( 
-			'itop-config-mgmt/2.7.0',
+			'itop-config-mgmt/3.2.0',
                 ),
                 'mandatory' => false,
                 'visible' => true,
