@@ -257,6 +257,9 @@
 						<item id="description">
 							<rank>51</rank>
 						</item>
+						<item id="end_of_life_date">
+							<rank>61</rank>
+						</item>
 						<item id="installations_list">
 							<rank>901</rank>
 						</item>
@@ -1107,7 +1110,9 @@
 		<class id="lnkSoftwareInstanceToSoftwarePatch" _delta="delete"/>
 		<class id="lnkDocumentToLicence" _delta="delete"/>
 		<class id="lnkDocumentToSoftware" _delta="delete"/>
+		<class id="lnkDocumentToPatch" _delta="delete"/>
 		<class id="lnkFunctionalCIToOSPatch" _delta="delete"/>
+		<class id="Patch" _delta="delete"/>
 		<class id="SoftwareInstance" _delta="delete"/>
 		<class id="Software" _delta="delete"/>
 		<class id="Licence" _delta="delete"/>
@@ -1137,35 +1142,18 @@
 								<rank>1.4</rank>
 								<class>JBLicense</class>
 							</dashlet>
-							<dashlet id="sw_5" xsi:type="DashletBadge" _delta="define">
-								<rank>1.54</rank>
-								<class>JBDatabaseSchema</class>
-							</dashlet>
-							<dashlet id="sw_6" xsi:type="DashletBadge" _delta="define">
-								<rank>1.6</rank>
-								<class>JBWebApplication</class>
-							</dashlet>
-
 							<!-- Remove traditional items from overview. Unfortunately, the ID is a number. -->
-							<dashlet id="5" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- Middleware -->
-							<dashlet id="6" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- DBServer -->
-							<dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- WebServer -->
-							<dashlet id="8" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- PCSoftware -->
-							<dashlet id="9" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- OtherSoftware -->
-							<dashlet id="10" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- MiddlewareInstance -->
-							<dashlet id="11" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- DatabaseSchema -->
-							<dashlet id="12" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- WebApplication -->
-							<!-- 13 = Patch (?) -->
-							<dashlet id="14" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-							<!-- Licence -->
+							<!-- Compare to itop-config-mgmt -->
+							<dashlet id="5" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Middleware -->
+							<dashlet id="6" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- DBServer -->
+							<dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- WebServer -->
+							<dashlet id="8" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- PCSoftware -->
+							<dashlet id="9" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- OtherSoftware -->
+							<dashlet id="10" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- MiddlewareInstance -->
+							<!-- <dashlet id="11" xsi:type="DashletBadge" _delta="delete_if_exists"/>--><!-- DatabaseSchema -->
+							<!-- <dashlet id="12" xsi:type="DashletBadge" _delta="delete_if_exists"/>--><!-- WebApplication -->
+							<dashlet id="13" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Patch -->
+							<dashlet id="14" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Licence -->
 
 						</dashlets>
 					</cell>
@@ -1175,4 +1163,15 @@
 		<!-- Remove traditional Software catalog menu. More items must be deleted. -->
 		<menu id="Software" xsi:type="OQLMenuNode" _delta="delete_if_exists"/>
 	</menus>
+	<user_rights>
+		<group id="Configuration">
+			<class id="Licence" _delta="delete_if_exists"/>
+			<class id="Software" _delta="delete_if_exists"/>
+			<class id="Patch" _delta="delete_if_exists"/>
+			<class id="JBLicense" _delta="define"/>
+			<class id="JBSoftware" _delta="define"/>
+			<class id="JBSoftwareInstallation" _delta="define"/>
+			<class id="JBSoftwareVersion" _delta="define"/>
+		</group>
+	</user_rights>
 </itop_design>
