@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+	<!-- 
+ * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
+ * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
+-->
+	<classes>
+		<class id="AzureVirtualMachine">
+			<fields>
+				<field id="softwareinstances_list" xsi:type="AttributeLinkedSetIndirect" _delta="delete"/>
+			</fields>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwareinstances_list" _delta="delete"/>
+					</items>
+				</details>
+			</presentation>
+		</class>
+    	<class id="lnkAzureVirtualMachineToSoftwareInstance" _delta="delete"/>
+	</classes>
+</itop_design>
+
+

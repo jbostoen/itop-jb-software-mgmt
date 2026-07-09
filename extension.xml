@@ -4,13 +4,14 @@
 	<company></company>
 	<author><![CDATA[Jeffrey Bostoen]]></author>
 	<label><![CDATA[Datamodel: Software and license management]]></label>
-	<description><![CDATA[Improved software and software license management]]></description>
+	<description><![CDATA[Improved software and license management]]></description>
 	<version>3.2.260705</version>
 	<release_date>2026-07-05</release_date>
 	<version_description><![CDATA[]]></version_description>
 	<itop_version_min>3.2.0</itop_version_min>
 	<status>stable</status>
 	<mandatory>false</mandatory>
-	<more_info_url>https://github.com/jbostoen/iTop-custom-extensions/</more_info_url>
+	<more_info_url>https://jeffreybostoen.be</more_info_url>
 </extension>
+
 

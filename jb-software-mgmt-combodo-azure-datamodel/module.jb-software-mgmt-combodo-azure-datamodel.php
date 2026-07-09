@@ -10,25 +10,26 @@
 
 SetupWebPage::AddModule(
         __FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-        'jb-software-mgmt/3.2.260705',
+        'jb-software-mgmt-combodo-azure-datamodel/3.2.260705',
         array(
                 // Identification
                 //
-                'label' => 'Datamodel: Software and license management',
+                'label' => 'Datamodel: Software and license management / Combodo Azure Datamodel',
                 'category' => 'business',
 
                 // Setup
                 //
                 'dependencies' => array( 
-			'itop-config-mgmt/3.2.0',
+			'combodo-azure-datamodel/1.0.0',
                 ),
                 'mandatory' => false,
-                'visible' => true,
+                'visible' => false,
+                'auto_select' => 'SetupInfo::ModuleIsSelected("combodo-azure-datamodel")',
 
                 // Components
                 //
                 'datamodel' => array(
-			'model.jb-software-mgmt.php'
+			'model.jb-software-mgmt-combodo-azure-datamodel.php'
                 ),
                 'webservice' => array(
 
@@ -52,4 +53,6 @@ SetupWebPage::AddModule(
                 ),
         )
 );
+
+
 
