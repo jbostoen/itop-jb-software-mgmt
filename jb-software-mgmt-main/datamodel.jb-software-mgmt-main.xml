@@ -67,10 +67,11 @@
 					<default_value/>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
-				<field id="vendor" xsi:type="AttributeString">
-					<sql>vendor</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
+				<field id="vendor_id" xsi:type="AttributeExternalKey">
+					<sql>vendor_id</sql>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>Organization</target_class>
+					<is_null_allowed>true</is_null_allowed>
 				</field>
 				<field id="type" xsi:type="AttributeEnum">
 					<sort_type>label</sort_type>
@@ -106,7 +107,7 @@
 						<item id="name">
 							<rank>1</rank>
 						</item>
-						<item id="vendor">
+						<item id="vendor_id">
 							<rank>11</rank>
 						</item>
 						<item id="type">
@@ -132,7 +133,7 @@
 						<item id="name">
 							<rank>1</rank>
 						</item>
-						<item id="vendor">
+						<item id="vendor_id">
 							<rank>11</rank>
 						</item>
 						<item id="type">
@@ -145,7 +146,7 @@
 						<item id="name">
 							<rank>1</rank>
 						</item>
-						<item id="vendor">
+						<item id="vendor_id">
 							<rank>11</rank>
 						</item>
 						<item id="type">
