@@ -6,12 +6,66 @@
  * @details     Prefixed class names and tables to avoid conflicts with existing ones.
 -->
 	<classes>
-
+		<!-- Class clean-up operations. -->
+		<class id="DatabaseSchema">
+			<properties>
+				<obsolescence>
+					<condition _delta="redefine">softwareinstallation_id_obsolescence_flag</condition>
+				</obsolescence>
+				<naming>
+					<complementary_attributes _delta="redefine">
+						<attribute id="organization_name"/>
+						<attribute id="softwareinstallation_name"/>
+					</complementary_attributes>
+				</naming>
+			</properties>
+			<fields>
+				<field id="dbserver_id" xsi:type="AttributeExternalKey" _delta="delete"/>
+				<field id="dbserver_name" xsi:type="AttributeExternalField" _delta="delete"/>
+				<field id="softwareinstallation_id" xsi:type="AttributeExternalKey">
+					<sql>softwareinstallation_id</sql>
+					<target_class>SoftwareInstallation</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_MANUAL</on_target_delete>
+				</field>
+				<field id="softwareinstallation_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwareinstallation_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
+			</fields>
+			<presentation>
+				<details>
+					<items>
+						<item id="dbserver_id" _delta="delete"/>
+						<item id="softwareinstallation_id" _delta="define">
+							<rank>30</rank>
+						</item>
+					</items>
+				</details>
+				<default_search>
+					<items>
+						<item id="dbserver_id" _delta="delete"/>
+						<item id="softwareinstallation_id" _delta="define">
+							<rank>20</rank>
+						</item>
+					</items>
+				</default_search>
+				<summary>
+					<items>
+						<item id="dbserver_id" _delta="delete"/>
+						<item id="softwareinstallation_id" _delta="define">
+							<rank>20</rank>
+						</item>
+					</items>
+				</summary>
+			</presentation>
+			<methods/>
+		</class>
 		<!-- Override the existing softwares_list on FunctionalCI -->
 		<class id="FunctionalCI">
 			<fields>
 				<field id="softwares_list" xsi:type="AttributeLinkedSet" _delta="if_exists">
-					<linked_class _delta="redefine">JBSoftwareInstallation</linked_class>
+					<linked_class _delta="redefine">SoftwareInstallation</linked_class>
 					<ext_key_to_me _delta="redefine">functionalci_id</ext_key_to_me>
 					<edit_mode _delta="redefine">add_only</edit_mode>
 				</field>
@@ -21,336 +75,388 @@
 					<neighbours>
 						<!-- Not really required since it refers to the same attribute, but still. -->
 						<neighbour id="softwareinstance" _delta="delete_if_exists"/>
-						<neighbour id="jbsoftwareinstallation" _delta="define">
+						<neighbour id="softwareinstallation" _delta="define">
 							<attribute>softwares_list</attribute>
 						</neighbour>
 					</neighbours>
 				</relation>
 			</relations>
 		</class>
-		<class id="JBSoftware" _delta="define">
+		<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="lnkSoftwareLicenseToSoftwareVersion" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
-				<category>bizmodel,searchable,structure</category>
+				<is_link>1</is_link>
+				<category>bizmodel</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>jbsoftware</db_table>
+				<db_table>software_mgmt_lnklicensetoversion</db_table>
 				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
 				<naming>
 					<attributes>
-						<attribute id="name"/>
+						<attribute id="softwarelicense_id"/>
+						<attribute id="softwareversion_id"/>
 					</attributes>
 				</naming>
-				<order>
-					<columns>
-						<column id="name" ascending="true"/>
-					</columns>
-				</order>
+				<style>
+					<icon/>
+				</style>
 				<reconciliation>
 					<attributes>
-						<attribute id="name"/>
+						<attribute id="softwarelicense_id"/>
+						<attribute id="softwareversion_id"/>
 					</attributes>
 				</reconciliation>
-				<icon>images/software.png</icon>
 				<uniqueness_rules>
-					<rule id="UniqueSoftware">
+					<rule id="UniqueSoftwareVersionAndLicense">
 						<attributes>
-							<attribute id="name"/>
+							<attribute id="softwarelicense_id"/>
+							<attribute id="softwareversion_id"/>
 						</attributes>
+						<filter><![CDATA[]]></filter>
+						<disabled>false</disabled>
 						<is_blocking>true</is_blocking>
 					</rule>
 				</uniqueness_rules>
 			</properties>
 			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
+				<field id="softwarelicense_id" xsi:type="AttributeExternalKey">
+					<sql>softwarelicense_id</sql>
+					<target_class>SoftwareLicense</target_class>
 					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="vendor_id" xsi:type="AttributeExternalKey">
-					<sql>vendor_id</sql>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>Organization</target_class>
-					<is_null_allowed>true</is_null_allowed>
 				</field>
-				<field id="type" xsi:type="AttributeEnum">
-					<sort_type>label</sort_type>
-					<values>
-						<value id="client_software">
-							<code>client_software</code>
-						</value>
-						<value id="cloud_software">
-							<code>cloud_software</code>
-						</value>
-						<value id="server_software">
-							<code>server_software</code>
-						</value>
-						<value id="operating_system">
-							<code>operating_system</code>
-						</value>
-					</values>
-					<sql>type</sql>
-					<default_value/>
+				<field id="license_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwarelicense_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
+				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
+					<sql>softwareversion_id</sql>
+					<target_class>SoftwareVersion</target_class>
 					<is_null_allowed>false</is_null_allowed>
-					<display_style>list</display_style>
-				</field>
-				<field id="versions_list" xsi:type="AttributeLinkedSet">
-					<linked_class>JBSoftwareVersion</linked_class>
-					<ext_key_to_me>software_id</ext_key_to_me>
-					<edit_mode>add_only</edit_mode>
+					<on_target_delete>DEL_AUTO</on_target_delete>
 				</field>
 			</fields>
 			<methods/>
 			<presentation>
 				<details>
 					<items>
-						<item id="name">
-							<rank>1</rank>
+						<item id="softwarelicense_id">
+							<rank>10</rank>
 						</item>
-						<item id="vendor_id">
-							<rank>11</rank>
-						</item>
-						<item id="type">
-							<rank>21</rank>
-						</item>
-						<item id="versions_list">
-							<rank>901</rank>
+						<item id="softwareversion_id">
+							<rank>20</rank>
 						</item>
 					</items>
 				</details>
 				<search>
 					<items>
-						<item id="name">
-							<rank>1</rank>
+						<item id="softwarelicense_id">
+							<rank>10</rank>
 						</item>
-						<item id="type">
-							<rank>21</rank>
+						<item id="softwareversion_id">
+							<rank>20</rank>
 						</item>
 					</items>
 				</search>
-				<default_search>
-					<items>
-						<item id="name">
-							<rank>1</rank>
-						</item>
-						<item id="vendor_id">
-							<rank>11</rank>
-						</item>
-						<item id="type">
-							<rank>21</rank>
-						</item>
-					</items>
-				</default_search>
 				<list>
 					<items>
-						<item id="name">
-							<rank>1</rank>
+						<item id="softwarelicense_id">
+							<rank>10</rank>
 						</item>
-						<item id="vendor_id">
-							<rank>11</rank>
-						</item>
-						<item id="type">
-							<rank>21</rank>
+						<item id="softwareversion_id">
+							<rank>20</rank>
 						</item>
 					</items>
 				</list>
 			</presentation>
 		</class>
-		<class id="JBSoftwareVersion" _delta="define">
+		<class id="SoftwareBuild" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
 				<category>bizmodel,searchable,structure</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>jbsoftwareversion</db_table>
+				<db_table>software_mgmt_build</db_table>
 				<db_key_field>id</db_key_field>
 				<naming>
 					<attributes>
-						<attribute id="software_id_friendlyname"/>
-						<attribute id="version"/>
+						<attribute id="softwareversion_id_friendlyname"/>
+						<attribute id="build_number"/>
 					</attributes>
 				</naming>
 				<order>
 					<columns>
-						<attribute id="software_id"/>
-						<attribute id="version"/>
+						<attribute id="softwareversion_id"/>
+						<attribute id="build_number"/>
 					</columns>
 				</order>
 				<reconciliation>
 					<attributes>
-						<attribute id="software_id"/>
-						<attribute id="version"/>
+						<attribute id="softwareversion_id"/>
+						<attribute id="build_number"/>
 					</attributes>
 				</reconciliation>
-				<icon>images/software.png</icon>
+				<style>
+					<icon>images/SoftwareBuild.png</icon>
+				</style>
 				<uniqueness_rules>
-					<rule id="UniqueSoftwareVersion">
+					<rule id="UniqueSoftwareBuildPerSoftwareVersion">
 						<attributes>
-							<attribute id="software_id"/>
-							<attribute id="version"/>
+							<attribute id="softwareversion_id"/>
+							<attribute id="build_number"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
 					</rule>
 				</uniqueness_rules>
 			</properties>
 			<fields>
-				<field id="software_id" xsi:type="AttributeExternalKey">
-					<sql>software_id</sql>
+				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
+					<sql>softwareversion_id</sql>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>JBSoftware</target_class>
+					<target_class>SoftwareVersion</target_class>
 					<allow_target_creation>true</allow_target_creation>
 				</field>
-				<field id="software_id_friendlyname" xsi:type="AttributeExternalField">
-					<extkey_attcode>software_id</extkey_attcode>
-					<target_attcode>friendlyname</target_attcode>
-				</field>
-				<field id="version" xsi:type="AttributeString">
-					<sql>version</sql>
+				<field id="build_number" xsi:type="AttributeString">
+					<sql>build_number</sql>
 					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
+					<is_null_allowed>false</is_null_allowed>
 				</field>
-				<field id="edition" xsi:type="AttributeString">
-					<sql>edition</sql>
-					<default_value/>
+				<field id="softwarereleasetype_id" xsi:type="AttributeExternalKey">
+					<sql>softwarereleasetype_id</sql>
 					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>SoftwareReleaseType</target_class>
+					<allow_target_creation>true</allow_target_creation>
 				</field>
-				<field id="description" xsi:type="AttributeHTML">
-					<sql>description</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="release_date" xsi:type="AttributeHTML">
+				<field id="release_date" xsi:type="AttributeDate">
 					<sql>release_date</sql>
 					<default_value/>
 					<is_null_allowed>true</is_null_allowed>
 				</field>
-				<field id="end_of_life_date" xsi:type="AttributeDate">
-					<sql>end_of_life_date</sql>
-					<default_value/>
+				<field id="tags" xsi:type="AttributeTagSet">
+					<sql>tags</sql>
 					<is_null_allowed>true</is_null_allowed>
+					<max_items>12</max_items>
+					<tag_code_max_len>20</tag_code_max_len>
 				</field>
-				<field id="installations_list" xsi:type="AttributeLinkedSet">
-					<linked_class>JBSoftwareInstallation</linked_class>
-					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+				<field id="status" xsi:type="AttributeEnum">
+					<sql>status</sql>
+					<values>
+						<value id="latest">
+							<code>latest</code>
+							<style>
+								<main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-check-circle</decoration_classes>
+							</style>
+						</value>
+						<value id="outdated">
+							<code>outdated</code>
+							<style>
+								<main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-exclamation-triangle</decoration_classes>
+							</style>
+						</value>
+						<value id="unsupported">
+							<code>unsupported</code>
+							<style>
+								<main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-times-circle</decoration_classes>
+							</style>
+						</value>
+						<value id="unknown">
+							<code>unknown</code>
+							<style>
+								<main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-question-circle</decoration_classes>
+							</style>
+						</value>
+					</values>
+					<default_value>unknown</default_value>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="softwareversion_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwareversion_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
+				<field id="softwareinstallations_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareInstallation</linked_class>
+					<ext_key_to_me>softwarebuild_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
-				<field id="licenses_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkJBLicenseToJBSoftwareVersion</linked_class>
-					<ext_key_to_me>softwareversion_id</ext_key_to_me>
-					<ext_key_to_remote>license_id</ext_key_to_remote>
-					<display_style>tab</display_style>
-				</field>
 			</fields>
-			<methods/>
+			<methods>
+				<method id="GetInitialStateAttributeFlags">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+
+				public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+
+					if($sAttCode === 'status') {
+						return OPT_ATT_READONLY;
+					}
+
+					return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+					
+				}
+					]]>					</code>
+				</method>
+				<method id="GetAttributeFlags">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+
+				public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+
+					if($sAttCode === 'status') {
+						return OPT_ATT_READONLY;
+					}
+
+					return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+					
+				}
+					]]>					</code>
+				</method>
+			</methods>
 			<presentation>
 				<details>
 					<items>
-						<item id="software_id">
+						<item id="softwareversion_id">
 							<rank>11</rank>
 						</item>
-						<item id="version">
+						<item id="build_number">
 							<rank>21</rank>
 						</item>
-						<item id="edition">
+						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
-						<item id="description">
+						<item id="release_date">
 							<rank>51</rank>
 						</item>
-						<item id="end_of_life_date">
+						<item id="status">
 							<rank>61</rank>
 						</item>
-						<item id="installations_list">
-							<rank>901</rank>
+						<item id="tags">
+							<rank>801</rank>
 						</item>
-						<item id="licenses_list">
+						<item id="softwareinstallations_list">
 							<rank>902</rank>
 						</item>
 					</items>
 				</details>
 				<search>
 					<items>
-						<item id="software_id">
+						<item id="softwareversion_id">
 							<rank>11</rank>
 						</item>
-						<item id="version">
+						<item id="build_number">
 							<rank>21</rank>
 						</item>
-						<item id="end_of_life_date">
+						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
+						<item id="release_date">
+							<rank>51</rank>
+						</item>
+						<item id="status">
+							<rank>61</rank>
+						</item>
+						<item id="tags">
+							<rank>801</rank>
+						</item>>
 					</items>
 				</search>
 				<default_search>
 					<items>
-						<item id="software_id">
+						<item id="softwareversion_id">
 							<rank>11</rank>
 						</item>
-						<item id="version">
+						<item id="build_number">
 							<rank>21</rank>
 						</item>
-						<item id="release_date">
-							<rank>30</rank>
-						</item>
-						<item id="end_of_life_date">
+						<item id="softwarereleasetype_id">
 							<rank>31</rank>
+						</item>
+						<item id="release_date">
+							<rank>51</rank>
+						</item>
+						<item id="status">
+							<rank>61</rank>
+						</item>
+						<item id="tags">
+							<rank>801</rank>
 						</item>
 					</items>
 				</default_search>
 				<list>
 					<items>
-						<item id="software_id">
+						<item id="softwareversion_id">
 							<rank>11</rank>
 						</item>
-						<item id="version">
+						<item id="build_number">
 							<rank>21</rank>
 						</item>
-						<item id="release_date">
-							<rank>30</rank>
-						</item>
-						<item id="end_of_life_date">
+						<item id="softwarereleasetype_id">
 							<rank>31</rank>
+						</item>
+						<item id="release_date">
+							<rank>51</rank>
+						</item>
+						<item id="status">
+							<rank>61</rank>
+						</item>
+						<item id="tags">
+							<rank>801</rank>
 						</item>
 					</items>
 				</list>
 			</presentation>
 		</class>
-		<class id="JBSoftwareInstallation" _delta="define">
+		<class id="SoftwareInstallation" _delta="define">
 			<parent>FunctionalCI</parent>
 			<properties>
 				<category>bizmodel,searchable</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>jbsoftwareinstallation</db_table>
+				<db_table>software_mgmt_installation</db_table>
 				<db_key_field>id</db_key_field>
 				<db_final_class_field/>
 				<naming>
 					<attributes>
 						<!-- Obscure iTop issue: "failed to create alias" if you use functionalci_id_friendlyname -->
-						<attribute id="softwareversion_friendlyname"/>
+						<attribute id="softwarebuild_friendlyname"/>
 						<attribute id="functionalci_name"/>
 						<attribute id="organization_name"/>
 					</attributes>
 				</naming>
 				<order>
 					<columns>
-						<column id="softwareversion_id" ascending="true"/>
+						<column id="softwarebuild_id" ascending="true"/>
 						<column id="functionalci_id" ascending="true"/>
 					</columns>
 				</order>
 				<reconciliation>
 					<attributes>
-						<attribute id="softwareversion_id"/>
+						<attribute id="softwarebuild_id"/>
 						<attribute id="functionalci_id"/>
 					</attributes>
 				</reconciliation>
-				<icon>images/software.png</icon>
+				<style>
+					<icon>images/SoftwareInstance.png</icon>
+				</style>
 				<uniqueness_rules>
 					<rule id="UniqueSoftwareInstallationPerOrganization">
 						<attributes>
 							<attribute id="org_id"/>
-							<attribute id="softwareversion_id"/>
+							<attribute id="softwarebuild_id"/>
 							<attribute id="functionalci_id"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
@@ -362,7 +468,7 @@
 			</properties>
 			<fields>
 				<!-- 2020-02-18: 
-					It might be interesting to have a dependency for FunctionalCI and JBSoftwareVersion to share the same org_id.
+					It might be interesting to have a dependency for FunctionalCI and SoftwareVersion to share the same org_id.
 					However, some organizations may share a license.
 				-->
 				<field id="functionalci_id" xsi:type="AttributeExternalKey">
@@ -375,44 +481,54 @@
 						WHERE finalclass IN ('Hypervisor', 'NetworkDevice', 'Printer', 'PC', 'Server', 'VirtualMachine')
 					]]>					</filter>
 				</field>
+				<field id="install_date" xsi:type="AttributeDateTime">
+					<sql>install_date</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
 				<field id="functionalci_name" xsi:type="AttributeExternalField">
 					<extkey_attcode>functionalci_id</extkey_attcode>
 					<target_attcode>name</target_attcode>
 				</field>
-				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
-					<sql>softwareversion_id</sql>
+				<field id="softwarebuild_id" xsi:type="AttributeExternalKey">
+					<sql>softwarebuild_id</sql>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>JBSoftwareVersion</target_class>
+					<target_class>SoftwareBuild</target_class>
 				</field>
-				<field id="softwareversion_friendlyname" xsi:type="AttributeExternalField">
-					<extkey_attcode>softwareversion_id</extkey_attcode>
+				<field id="softwarebuild_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwarebuild_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
-				<field id="license_id" xsi:type="AttributeExternalKey">
-					<sql>license_id</sql>
+				<field id="softwarebuild_softwarereleasetype_id" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwarebuild_id</extkey_attcode>
+					<target_attcode>softwarereleasetype_id</target_attcode>
+				</field>
+				<field id="softwarebuild_status" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwarebuild_id</extkey_attcode>
+					<target_attcode>status</target_attcode>
+				</field>
+				<field id="softwarelicense_id" xsi:type="AttributeExternalKey">
+					<sql>softwarelicense_id</sql>
 					<!-- Not all software has a license. -->
 					<is_null_allowed>true</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
-					<target_class>JBLicense</target_class>
+					<target_class>SoftwareLicense</target_class>
 					<filter><![CDATA[
-						SELECT JBLicense AS l 
-						JOIN lnkJBLicenseToJBSoftwareVersion AS lnk ON lnk.license_id = l.id 
+						SELECT SoftwareLicense AS l 
+						JOIN lnkSoftwareLicenseToSoftwareVersion AS lnk ON lnk.softwarelicense_id = l.id 
+						JOIN SoftwareVersion AS sv ON lnk.softwareversion_id = sv.id 
+						JOIN SoftwareBuild AS sb ON sb.softwareversion_id = sv.id
 						WHERE 
-							lnk.softwareversion_id = :this->softwareversion_id
+							sb.id = :this->softwarebuild_id
 					]]>					</filter>
 					<dependencies>
-						<attribute id="softwareversion_id"/>
+						<attribute id="softwarebuild_id"/>
 					</dependencies>
 				</field>
-				<field id="license_id_friendlyname" xsi:type="AttributeExternalField">
-					<extkey_attcode>license_id</extkey_attcode>
+				<field id="softwarelicense_id_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwarelicense_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
-				</field>
-				<field id="version_details" xsi:type="AttributeString">
-					<sql>version_details</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<sql>status</sql>
@@ -464,7 +580,7 @@
 							parent::OnInsert();
 							
 							// Remember how the "name" didn't matter (specific dummy value in PrefillCreationForm and hidden elsewhere?)
-							$this->Set('name', $this->Get('softwareversion_friendlyname').' | '.$this->Get('functionalci_name'));
+							$this->Set('name', $this->Get('softwarebuild_friendlyname').' | '.$this->Get('functionalci_name'));
 						
 						}
 						
@@ -481,8 +597,8 @@
 							parent::OnUpdate();
 							
 							$aChanges = $this->ListChanges();
-							if(array_key_exists('functionalci_id', $aChanges) || array_key_exists('softwareversion_id', $aChanges)) {
-								$this->Set('name', $this->Get('softwareversion_friendlyname').' | '.$this->Get('functionalci_name'));
+							if(array_key_exists('functionalci_id', $aChanges) || array_key_exists('softwarebuild_id', $aChanges)) {
+								$this->Set('name', $this->Get('softwarebuild_friendlyname').' | '.$this->Get('functionalci_name'));
 							}
 							
 						}
@@ -505,17 +621,23 @@
 						<item id="functionalci_id">
 							<rank>11</rank>
 						</item>
-						<item id="softwareversion_id">
+						<item id="softwarebuild_id">
 							<rank>21</rank>
 						</item>
-						<item id="license_id">
+						<item id="softwarebuild_status">
+							<rank>21.1</rank>
+						</item>
+						<item id="softwarebuild_softwarereleasetype_id">
+							<rank>21.2</rank>
+						</item>
+						<item id="softwarelicense_id">
 							<rank>22</rank>
 						</item>
 						<item id="business_criticity">
 							<rank>201</rank>
 						</item>
-						<item id="version_details">
-							<rank>31</rank>
+						<item id="install_date">
+							<rank>301</rank>
 						</item>
 					</items>
 				</details>
@@ -534,14 +656,17 @@
 						<item id="functionalci_id">
 							<rank>11</rank>
 						</item>
-						<item id="softwareversion_id">
+						<item id="softwarebuild_id">
 							<rank>21</rank>
 						</item>
-						<item id="license_id">
-							<rank>22</rank>
+						<item id="softwarebuild_status">
+							<rank>21.1</rank>
 						</item>
-						<item id="version_details">
-							<rank>31</rank>
+						<item id="softwarebuild_softwarereleasetype_id">
+							<rank>21.2</rank>
+						</item>
+						<item id="softwarelicense_id">
+							<rank>22</rank>
 						</item>
 					</items>
 				</search>
@@ -560,14 +685,11 @@
 						<item id="functionalci_id">
 							<rank>11</rank>
 						</item>
-						<item id="softwareversion_id">
+						<item id="softwarebuild_id">
 							<rank>21</rank>
 						</item>
-						<item id="license_id">
+						<item id="softwarelicense_id">
 							<rank>22</rank>
-						</item>
-						<item id="version_details">
-							<rank>31</rank>
 						</item>
 					</items>
 				</default_search>
@@ -579,26 +701,32 @@
 						<item id="functionalci_id">
 							<rank>11</rank>
 						</item>
-						<item id="softwareversion_id">
+						<item id="softwarebuild_id">
 							<rank>21</rank>
 						</item>
-						<item id="license_id">
+						<item id="softwarelicense_id">
 							<rank>22</rank>
 						</item>
-						<item id="version_details">
+						<item id="softwarebuild_status">
 							<rank>31</rank>
+						</item>
+						<item id="softwarebuild_softwarereleasetype_id">
+							<rank>31</rank>
+						</item>
+						<item id="install_date">
+							<rank>301</rank>
 						</item>
 					</items>
 				</list>
 			</presentation>
 		</class>
-		<class id="JBLicense" _delta="define">
+		<class id="SoftwareLicense" _delta="define">
 			<parent>FunctionalCI</parent>
 			<properties>
 				<category>bizmodel,searchable,structure</category>
 				<abstract>false</abstract>
 				<key_type>autoincrement</key_type>
-				<db_table>jblicense</db_table>
+				<db_table>software_mgmt_license</db_table>
 				<db_key_field>id</db_key_field>
 				<naming>
 					<attributes>
@@ -615,7 +743,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</reconciliation>
-				<icon>images/license.png</icon>
+				<style>
+					<icon>images/SoftwareLicense.png</icon>
+				</style>
 				<uniqueness_rules>
 					<rule id="UniqueLicensePerOrganization">
 						<attributes>
@@ -699,14 +829,14 @@
 					<default_value/>
 				</field>
 				<field id="softwareversions_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkJBLicenseToJBSoftwareVersion</linked_class>
-					<ext_key_to_me>license_id</ext_key_to_me>
+					<linked_class>lnkSoftwareLicenseToSoftwareVersion</linked_class>
+					<ext_key_to_me>softwarelicense_id</ext_key_to_me>
 					<ext_key_to_remote>softwareversion_id</ext_key_to_remote>
 					<display_style>tab</display_style>
 				</field>
-				<field id="installations_list" xsi:type="AttributeLinkedSet">
-					<linked_class>JBSoftwareInstallation</linked_class>
-					<ext_key_to_me>license_id</ext_key_to_me>
+				<field id="softwareinstallations_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareInstallation</linked_class>
+					<ext_key_to_me>softwarelicense_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
 			</fields>
@@ -753,7 +883,7 @@
 						<item id="softwareversions_list">
 							<rank>901</rank>
 						</item>
-						<item id="installations_list">
+						<item id="softwareinstallations_list">
 							<rank>911</rank>
 						</item>
 						<item id="contacts_list">
@@ -877,84 +1007,383 @@
 				</list>
 			</presentation>
 		</class>
-		<!-- Class clean-up operations. -->
-		<class id="DatabaseSchema">
+		<class id="SoftwareProduct" _delta="define">
+			<parent>cmdbAbstractObject</parent>
 			<properties>
-				<obsolescence>
-					<condition _delta="redefine">jbsoftwareinstallation_id_obsolescence_flag</condition>
-				</obsolescence>
+				<category>bizmodel,searchable,structure</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_product</db_table>
+				<db_key_field>id</db_key_field>
 				<naming>
-					<complementary_attributes _delta="redefine">
-						<attribute id="organization_name"/>
-						<attribute id="jbsoftwareinstallation_name"/>
-					</complementary_attributes>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
 				</naming>
+				<order>
+					<columns>
+						<column id="name" ascending="true"/>
+					</columns>
+				</order>
+				<reconciliation>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</reconciliation>
+				<style>
+					<icon>images/SoftwareProduct.png</icon>
+				</style>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareProduct">
+						<attributes>
+							<attribute id="name"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
 			</properties>
 			<fields>
-				<field id="dbserver_id" xsi:type="AttributeExternalKey" _delta="delete"/>
-				<field id="dbserver_name" xsi:type="AttributeExternalField" _delta="delete"/>
-				<field id="jbsoftwareinstallation_id" xsi:type="AttributeExternalKey">
-					<sql>jbsoftwareinstallation_id</sql>
-					<target_class>JBSoftwareInstallation</target_class>
+				<field id="name" xsi:type="AttributeString">
+					<sql>name</sql>
+					<default_value/>
 					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
 				</field>
-				<field id="jbsoftwareinstallation_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>jbsoftwareinstallation_id</extkey_attcode>
-					<target_attcode>friendlyname</target_attcode>
+				<field id="vendor_id" xsi:type="AttributeExternalKey">
+					<sql>vendor_id</sql>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>Organization</target_class>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="type" xsi:type="AttributeEnum">
+					<sort_type>label</sort_type>
+					<values>
+						<value id="client_software">
+							<code>client_software</code>
+						</value>
+						<value id="cloud_software">
+							<code>cloud_software</code>
+						</value>
+						<value id="server_software">
+							<code>server_software</code>
+						</value>
+						<value id="operating_system">
+							<code>operating_system</code>
+						</value>
+					</values>
+					<sql>type</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="softwareversions_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareVersion</linked_class>
+					<ext_key_to_me>softwareproduct_id</ext_key_to_me>
+					<edit_mode>add_only</edit_mode>
+				</field>
+				<field id="tags" xsi:type="AttributeTagSet">
+					<sql>tags</sql>
+					<is_null_allowed>true</is_null_allowed>
+					<max_items>12</max_items>
+					<tag_code_max_len>20</tag_code_max_len>
 				</field>
 			</fields>
+			<methods/>
 			<presentation>
 				<details>
 					<items>
-						<item id="dbserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id" _delta="define">
-							<rank>30</rank>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="vendor_id">
+							<rank>11</rank>
+						</item>
+						<item id="type">
+							<rank>21</rank>
+						</item>
+						<item id="tags">
+							<rank>801</rank>
+						</item>
+						<item id="softwareversions_list">
+							<rank>901</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>21</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="vendor_id">
+							<rank>11</rank>
+						</item>
+						<item id="type">
+							<rank>21</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="vendor_id">
+							<rank>11</rank>
+						</item>
+						<item id="type">
+							<rank>21</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="SoftwareReleaseType" _delta="define">
+			<parent>Typology</parent>
+			<properties>
+				<category>bizmodel,searchable</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_release_type</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</naming>
+				<icon/>
+				<reconciliation>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</reconciliation>
+				<uniqueness_rules/>
+			</properties>
+			<fields/>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="name">
+							<rank>10</rank>
 						</item>
 					</items>
 				</details>
 				<default_search>
 					<items>
-						<item id="dbserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id" _delta="define">
-							<rank>20</rank>
+						<item id="name">
+							<rank>10</rank>
 						</item>
 					</items>
 				</default_search>
-				<summary>
+				<search>
 					<items>
-						<item id="dbserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id" _delta="define">
-							<rank>20</rank>
+						<item id="name">
+							<rank>10</rank>
 						</item>
 					</items>
-				</summary>
+				</search>
+				<list>
+					<items>
+						<item id="name">
+							<rank>10</rank>
+						</item>
+					</items>
+				</list>
 			</presentation>
+		</class>
+		<class id="SoftwareVersion" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable,structure</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_version</db_table>
+				<db_key_field>id</db_key_field>
+				<naming>
+					<attributes>
+						<attribute id="softwareproduct_id_friendlyname"/>
+						<attribute id="version"/>
+					</attributes>
+				</naming>
+				<order>
+					<columns>
+						<attribute id="softwareproduct_id"/>
+						<attribute id="version"/>
+					</columns>
+				</order>
+				<style>
+					<icon>images/SoftwareVersion.png</icon>
+				</style>
+				<reconciliation>
+					<attributes>
+						<attribute id="softwareproduct_id"/>
+						<attribute id="version"/>
+					</attributes>
+				</reconciliation>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareVersionPerSoftwareProduct">
+						<attributes>
+							<attribute id="softwareproduct_id"/>
+							<attribute id="version"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="softwareproduct_id" xsi:type="AttributeExternalKey">
+					<sql>softwareproduct_id</sql>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>SoftwareProduct</target_class>
+					<allow_target_creation>true</allow_target_creation>
+				</field>
+				<field id="softwareproduct_id_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwareproduct_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
+				<field id="version" xsi:type="AttributeString">
+					<sql>version</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="edition" xsi:type="AttributeString">
+					<sql>edition</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="description" xsi:type="AttributeHTML">
+					<sql>description</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="end_of_life_date" xsi:type="AttributeDate">
+					<sql>end_of_life_date</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="softwarebuilds_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareBuild</linked_class>
+					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+					<edit_mode>add_only</edit_mode>
+				</field>
+				<field id="softwarelicenses_list" xsi:type="AttributeLinkedSetIndirect">
+					<linked_class>lnkSoftwareLicenseToSoftwareVersion</linked_class>
+					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+					<ext_key_to_remote>softwarelicense_id</ext_key_to_remote>
+					<display_style>tab</display_style>
+				</field>
+				<field id="tags" xsi:type="AttributeTagSet">
+					<sql>tags</sql>
+					<is_null_allowed>true</is_null_allowed>
+					<max_items>12</max_items>
+					<tag_code_max_len>20</tag_code_max_len>
+				</field>
+			</fields>
 			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwareproduct_id">
+							<rank>11</rank>
+						</item>
+						<item id="version">
+							<rank>21</rank>
+						</item>
+						<item id="edition">
+							<rank>31</rank>
+						</item>
+						<item id="description">
+							<rank>51</rank>
+						</item>
+						<item id="end_of_life_date">
+							<rank>61</rank>
+						</item>
+						<item id="tags">
+							<rank>801</rank>
+						</item>
+						<item id="softwarebuilds_list">
+							<rank>901</rank>
+						</item>
+						<item id="softwarelicenses_list">
+							<rank>903</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="softwareproduct_id">
+							<rank>11</rank>
+						</item>
+						<item id="version">
+							<rank>21</rank>
+						</item>
+						<item id="end_of_life_date">
+							<rank>31</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="softwareproduct_id">
+							<rank>11</rank>
+						</item>
+						<item id="version">
+							<rank>21</rank>
+						</item>
+						<item id="end_of_life_date">
+							<rank>31</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="softwareproduct_id">
+							<rank>11</rank>
+						</item>
+						<item id="version">
+							<rank>21</rank>
+						</item>
+						<item id="end_of_life_date">
+							<rank>31</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
 		</class>
 		<class id="WebApplication">
 			<properties>
 				<naming>
 					<complementary_attributes _delta="redefine">
 						<attribute id="organization_name"/>
-						<attribute id="jbsoftwareinstallation_name"/>
+						<attribute id="softwareinstallation_name"/>
 					</complementary_attributes>
 				</naming>
 				<obsolescence>
-					<condition>jbsoftwareinstallation_id_obsolescence_flag</condition>
+					<condition>softwareinstallation_id_obsolescence_flag</condition>
 				</obsolescence>
 			</properties>
 			<fields>
 				<field id="webserver_id" xsi:type="AttributeExternalKey" _delta="delete"/>
 				<field id="webserver_name" xsi:type="AttributeExternalField" _delta="delete"/>
-				<field id="jbsoftwareinstallation_id" xsi:type="AttributeExternalKey">
-					<sql>jbsoftwareinstallation_id</sql>
-					<target_class>JBSoftwareInstallation</target_class>
+				<field id="softwareinstallation_id" xsi:type="AttributeExternalKey">
+					<sql>softwareinstallation_id</sql>
+					<target_class>SoftwareInstallation</target_class>
 					<is_null_allowed>false</is_null_allowed>
 					<on_target_delete>DEL_MANUAL</on_target_delete>
 				</field>
-				<field id="jbsoftwareinstallation_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>jbsoftwareinstallation_id</extkey_attcode>
+				<field id="softwareinstallation_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwareinstallation_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
 				<field id="url" xsi:type="AttributeURL">
@@ -968,7 +1397,7 @@
 				<details>
 					<items>
 						<item id="webserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id">
+						<item id="softwareinstallation_id">
 							<rank>30</rank>
 						</item>
 					</items>
@@ -976,7 +1405,7 @@
 				<default_search>
 					<items>
 						<item id="webserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id">
+						<item id="softwareinstallation_id">
 							<rank>20</rank>
 						</item>
 					</items>
@@ -984,7 +1413,7 @@
 				<search>
 					<items>
 						<item id="webserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id">
+						<item id="softwareinstallation_id">
 							<rank>30</rank>
 						</item>
 					</items>
@@ -992,7 +1421,7 @@
 				<list>
 					<items>
 						<item id="webserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id">
+						<item id="softwareinstallation_id">
 							<rank>20</rank>
 						</item>
 					</items>
@@ -1000,102 +1429,13 @@
 				<summary>
 					<items>
 						<item id="webserver_id" _delta="delete"/>
-						<item id="jbsoftwareinstallation_id">
+						<item id="softwareinstallation_id">
 							<rank>20</rank>
 						</item>
 					</items>
 				</summary>
 			</presentation>
 			<methods/>
-		</class>
-		<class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="lnkJBLicenseToJBSoftwareVersion" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<is_link>1</is_link>
-				<category>bizmodel</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>lnkjblicensetosoftwareversion</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="license_id"/>
-						<attribute id="softwareversion_id"/>
-					</attributes>
-				</naming>
-				<style>
-					<icon/>
-				</style>
-				<reconciliation>
-					<attributes>
-						<attribute id="license_id"/>
-						<attribute id="softwareversion_id"/>
-					</attributes>
-				</reconciliation>
-				<uniqueness_rules>
-					<rule id="NoDuplicates">
-						<attributes>
-							<attribute id="license_id"/>
-							<attribute id="softwareversion_id"/>
-						</attributes>
-						<filter><![CDATA[]]></filter>
-						<disabled>false</disabled>
-						<is_blocking>true</is_blocking>
-					</rule>
-				</uniqueness_rules>
-			</properties>
-			<fields>
-				<field id="license_id" xsi:type="AttributeExternalKey">
-					<sql>license_id</sql>
-					<target_class>JBLicense</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_AUTO</on_target_delete>
-				</field>
-				<field id="license_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>license_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
-					<sql>softwareversion_id</sql>
-					<target_class>JBSoftwareVersion</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_AUTO</on_target_delete>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="license_id">
-							<rank>10</rank>
-						</item>
-						<item id="softwareversion_id">
-							<rank>20</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="license_id">
-							<rank>10</rank>
-						</item>
-						<item id="softwareversion_id">
-							<rank>20</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="license_id">
-							<rank>10</rank>
-						</item>
-						<item id="softwareversion_id">
-							<rank>20</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
 		</class>
 		<!-- Hint: Deleting the parent class, deletes all subclasses. To ensure it's done properly, as a safety, the children are removed first. -->
 		<class id="WebServer" _delta="delete"/>
@@ -1127,34 +1467,46 @@
 					<cell id="3">
 						<dashlets>
 							<!-- Avoid re-using official dashlet IDs -->
-							<dashlet id="sw_1" xsi:type="DashletBadge" _delta="define">
-								<rank>1.1</rank>
-								<class>JBSoftware</class>
+							<dashlet id="sw_11" xsi:type="DashletBadge" _delta="define">
+								<rank>1.11</rank>
+								<class>SoftwareProduct</class>
 							</dashlet>
-							<dashlet id="sw_2" xsi:type="DashletBadge" _delta="define">
-								<rank>1.2</rank>
-								<class>JBSoftwareVersion</class>
+							<dashlet id="sw_12" xsi:type="DashletBadge" _delta="define">
+								<rank>1.12</rank>
+								<class>SoftwareVersion</class>
 							</dashlet>
-							<dashlet id="sw_3" xsi:type="DashletBadge" _delta="define">
-								<rank>1.3</rank>
-								<class>JBSoftwareInstallation</class>
+							<dashlet id="sw_13" xsi:type="DashletBadge" _delta="define">
+								<rank>1.13</rank>
+								<class>SoftwareBuild</class>
 							</dashlet>
-							<dashlet id="sw_4" xsi:type="DashletBadge" _delta="define">
-								<rank>1.4</rank>
-								<class>JBLicense</class>
+							<dashlet id="sw_21" xsi:type="DashletBadge" _delta="define">
+								<rank>1.21</rank>
+								<class>SoftwareInstallation</class>
+							</dashlet>
+							<dashlet id="sw_22" xsi:type="DashletBadge" _delta="define">
+								<rank>1.22</rank>
+								<class>SoftwareLicense</class>
 							</dashlet>
 							<!-- Remove traditional items from overview. Unfortunately, the ID is a number. -->
 							<!-- Compare to itop-config-mgmt -->
-							<dashlet id="5" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Middleware -->
-							<dashlet id="6" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- DBServer -->
-							<dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- WebServer -->
-							<dashlet id="8" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- PCSoftware -->
-							<dashlet id="9" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- OtherSoftware -->
-							<dashlet id="10" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- MiddlewareInstance -->
-							<!-- <dashlet id="11" xsi:type="DashletBadge" _delta="delete_if_exists"/>--><!-- DatabaseSchema -->
-							<!-- <dashlet id="12" xsi:type="DashletBadge" _delta="delete_if_exists"/>--><!-- WebApplication -->
-							<dashlet id="13" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Patch -->
-							<dashlet id="14" xsi:type="DashletBadge" _delta="delete_if_exists"/><!-- Licence -->
+							<dashlet id="5" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- Middleware -->
+							<dashlet id="6" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- DBServer -->
+							<dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- WebServer -->
+							<dashlet id="8" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- PCSoftware -->
+							<dashlet id="9" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- OtherSoftware -->
+							<dashlet id="10" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- MiddlewareInstance -->
+							<!-- <dashlet id="11" xsi:type="DashletBadge" _delta="delete_if_exists"/> = DatabaseSchema -->
+							<!-- <dashlet id="12" xsi:type="DashletBadge" _delta="delete_if_exists"/> = WebApplication -->
+							<dashlet id="13" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- Patch -->
+							<dashlet id="14" xsi:type="DashletBadge" _delta="delete_if_exists"/>
+							<!-- Licence -->
 
 						</dashlets>
 					</cell>
@@ -1169,11 +1521,11 @@
 			<class id="Licence" _delta="delete_if_exists"/>
 			<class id="Software" _delta="delete_if_exists"/>
 			<class id="Patch" _delta="delete_if_exists"/>
-			<class id="JBLicense" _delta="define"/>
-			<class id="JBSoftware" _delta="define"/>
-			<class id="JBSoftwareInstallation" _delta="define"/>
-			<class id="JBSoftwareVersion" _delta="define"/>
+			<class id="SoftwareBuild" _delta="define"/>
+			<class id="SoftwareInstallation" _delta="define"/>
+			<class id="SoftwareLicense" _delta="define"/>
+			<class id="SoftwareProduct" _delta="define"/>
+			<class id="SoftwareVersion" _delta="define"/>
 		</group>
 	</user_rights>
 </itop_design>
-

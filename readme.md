@@ -125,14 +125,14 @@ Hint: You can also enable iTop attachments, so you can attach the license file.
 Caution: Installing this extension affects all the classes listed below.
 
 * FunctionalCI
-  * Replaces the tab with linked SoftwareInstance instances with JBSoftwareInstallation instances.
-  * Replaces neighbour "SoftwareInstance" with JBSoftwareInstallation.
+  * Replaces the tab with linked SoftwareInstance instances with SoftwareInstallation instances.
+  * Replaces neighbour "SoftwareInstance" with SoftwareInstallation.
 
 * DatabaseSchema
-  * Replaces the link to the DBServer (originally a subclass of SoftwareInstance) with a link to a JBSoftwareInstallation.
+  * Replaces the link to the DBServer (originally a subclass of SoftwareInstance) with a link to a SoftwareInstallation.
 
 * WebApplication
-  * Replaces the link to the WebServer (originally a subclass of SoftwareInstance) with a link to a JBSoftwareInstallation.
+  * Replaces the link to the WebServer (originally a subclass of SoftwareInstance) with a link to a SoftwareInstallation.
 
 
 
@@ -156,4 +156,14 @@ The following classes are removed:
 
 
 
+
+## Attributions
+
+Icons use the Flaticon license, Free for personal and commercial purpose with attribution.
+
+* SoftwareBuild: https://www.flaticon.com/free-icon/version-control_8297479 by jelly_fish
+* SoftwareInstallation: https://www.flaticon.com/free-icon/software_13079124 by Uniconlabs
+* SoftwareLicense: https://www.flaticon.com/free-icon/software-license_18101095 by Dewi Sari
+* SoftwareVersion: https://www.flaticon.com/free-icon/sku_1337185 by magnific
+* SoftwarProduct: https://www.flaticon.com/free-icon/devops_1988030 by SBTS2018
 
