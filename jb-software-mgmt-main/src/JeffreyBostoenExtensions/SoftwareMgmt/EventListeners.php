@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2021-2024 Jeffrey Bostoen
+ * @copyright   Copyright (c) 2021-2026 Jeffrey Bostoen
  * @license     See license.md
- * @version     2.7.240530
+ * @version     3.2.260729
  */
 
 namespace JeffreyBostoenExtensions\SoftwareMgmt;
@@ -31,6 +31,11 @@ class EventListenerPersonal implements iEventServiceSetup {
             SoftwareBuild::class
         );
         
+        EventService::RegisterListener(
+            EVENT_DB_AFTER_DELETE,
+            [$this, 'AfterDeleteSoftwareBuild'],
+            SoftwareBuild::class
+        );
 
     }
 
@@ -71,5 +76,35 @@ class EventListenerPersonal implements iEventServiceSetup {
     }
     
     
+
+    /**
+     * After a software build is successfully saved, ensure integrity.
+     * 
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function AfterDeleteSoftwareBuild(EventData $oEventData) {
+
+        // - Use the generic method.
+
+        Helper::Trace('Execute integrity check due to deleted software build.');
+
+        /** @var SoftwareBuild $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        $oProduct = MetaModel::GetObjectFromOQL('
+            SELECT SoftwareProduct AS sp 
+            JOIN SoftwareVersion AS sv ON sv.softwareproduct_id = sp.id
+            WHERE sv.id = :version_id
+        ', [
+            'version_id' => $oObj->Get('softwareversion_id')
+        ]);
+        
+        // - Other builds may need to be updated (e.g. if latest was just deleted, another one should be promoted).
+            Helper::UpdateStatusOfSoftwareBuilds([ $oProduct->GetKey() ], [ $oObj->Get('softwarevesion_id') ]);
+
+
+    }
 
 }

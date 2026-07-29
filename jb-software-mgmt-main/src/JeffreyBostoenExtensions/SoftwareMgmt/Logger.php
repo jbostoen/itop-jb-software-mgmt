@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2021-2024 Jeffrey Bostoen
+ * @copyright   Copyright (c) 2021-2026 Jeffrey Bostoen
  * @license     See license.md
- * @version     2.7.240530
+ * @version     3.2.260729
  */
 
 namespace JeffreyBostoenExtensions\SoftwareMgmt;

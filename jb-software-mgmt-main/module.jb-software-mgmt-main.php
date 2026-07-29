@@ -3,14 +3,14 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     3.2.260705
+ * @version     3.2.260729
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
         __FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-        'jb-software-mgmt-main/3.2.260726',
+        'jb-software-mgmt-main/3.2.260729',
         array(
                 // Identification
                 //
