@@ -2,7 +2,7 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     3.2.260729
+ * @version     3.2.260801
  *
  * Localized data
  */
@@ -129,8 +129,27 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareProduct/Attribute:type/Value:language' => 'Language',
 	'Class:SoftwareProduct/Attribute:softwareversions_list' => 'Versions',
 	'Class:SoftwareProduct/Attribute:softwareversions_list+' => 'Versions',
+	'Class:SoftwareProduct/Attribute:softwareproductexternalidentifiers_list' => 'External identifiers',
+	'Class:SoftwareProduct/Attribute:softwareproductexternalidentifiers_list+' => 'Identifiers used to recognize this product in external systems, such as a CPE or a package URL (purl).',
 	'Class:SoftwareProduct/UniquenessRule:UniqueSoftwareProduct' => 'The name of the software must be unique.',
-	
+
+	'Class:SoftwareProductExternalIdentifier' => 'Software Product External Identifier',
+	'Class:SoftwareProductExternalIdentifier+' => 'An identifier used to recognize a software product in an external system, such as a CPE (Common Platform Enumeration) or a package URL (purl). A product can have several identifiers, even of the same type (e.g. an older and a newer CPE naming for the same product).',
+	'Class:SoftwareProductExternalIdentifier/Name' => '%1$s | %2$s: %3$s',
+	'Class:SoftwareProductExternalIdentifier/Attribute:softwareproduct_id' => 'Software product',
+	'Class:SoftwareProductExternalIdentifier/Attribute:softwareproduct_id+' => 'The software product this identifier belongs to.',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type' => 'Type',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type+' => 'The kind of identifier.',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type/Value:cpe' => 'CPE',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type/Value:cpe+' => 'Common Platform Enumeration, e.g. "cpe:2.3:a:nginx:nginx".',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type/Value:purl' => 'Package URL (purl)',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type/Value:purl+' => 'Package URL, e.g. "pkg:npm/example".',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type/Value:repology' => 'Repology',
+	'Class:SoftwareProductExternalIdentifier/Attribute:type/Value:repology+' => 'Repology project identifier.',
+	'Class:SoftwareProductExternalIdentifier/Attribute:value' => 'Identifier',
+	'Class:SoftwareProductExternalIdentifier/Attribute:value+' => 'The raw identifier value, e.g. "cpe:2.3:a:nginx:nginx" or "pkg:npm/example".',
+	'Class:SoftwareProductExternalIdentifier/UniquenessRule:UniqueSoftwareProductExternalIdentifier' => 'The combination of the software product, identifier type and value must be unique.',
+
 	'Class:SoftwareReleaseType' => 'Software Release type',
 	'Class:SoftwareReleaseType+' => 'A software release type. Vendors can follow a specific release type naming convention, such as "Alpha", "Beta", "Release Candidate", "General Availability", ...',
 
