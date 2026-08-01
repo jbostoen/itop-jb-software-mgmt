@@ -125,6 +125,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareProduct/Attribute:type/Value:cloud_software' => 'Cloud software',
 	'Class:SoftwareProduct/Attribute:type/Value:operating_system' => 'Operating system',
 	'Class:SoftwareProduct/Attribute:type/Value:server_software' => 'Server software',
+	'Class:SoftwareProduct/Attribute:type/Value:framework' => 'Framework',
+	'Class:SoftwareProduct/Attribute:type/Value:language' => 'Language',
 	'Class:SoftwareProduct/Attribute:softwareversions_list' => 'Versions',
 	'Class:SoftwareProduct/Attribute:softwareversions_list+' => 'Versions',
 	'Class:SoftwareProduct/UniquenessRule:UniqueSoftwareProduct' => 'The name of the software must be unique.',

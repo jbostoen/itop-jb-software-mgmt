@@ -1069,6 +1069,12 @@
 						<value id="operating_system">
 							<code>operating_system</code>
 						</value>
+						<value id="framework">
+							<code>framework</code>
+						</value>
+						<value id="language">
+							<code>language</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value/>
