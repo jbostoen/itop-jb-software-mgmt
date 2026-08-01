@@ -198,7 +198,7 @@
 					</attributes>
 				</reconciliation>
 				<style>
-					<icon>images/SoftwareBuild.png</icon>
+					<icon>images/SoftwareBuild.svg</icon>
 				</style>
 				<uniqueness_rules>
 					<rule id="UniqueSoftwareBuildPerSoftwareVersion">
@@ -450,7 +450,7 @@
 					</attributes>
 				</reconciliation>
 				<style>
-					<icon>images/SoftwareInstance.png</icon>
+					<icon>images/SoftwareInstallation.svg</icon>
 				</style>
 				<uniqueness_rules>
 					<rule id="UniqueSoftwareInstallationPerOrganization">
@@ -744,7 +744,7 @@
 					</attributes>
 				</reconciliation>
 				<style>
-					<icon>images/SoftwareLicense.png</icon>
+					<icon>images/SoftwareLicense.svg</icon>
 				</style>
 				<uniqueness_rules>
 					<rule id="UniqueLicensePerOrganization">
@@ -1031,7 +1031,7 @@
 					</attributes>
 				</reconciliation>
 				<style>
-					<icon>images/SoftwareProduct.png</icon>
+					<icon>images/SoftwareProduct.svg</icon>
 				</style>
 				<uniqueness_rules>
 					<rule id="UniqueSoftwareProduct">
@@ -1361,7 +1361,7 @@
 					</columns>
 				</order>
 				<style>
-					<icon>images/SoftwareVersion.png</icon>
+					<icon>images/SoftwareVersion.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
