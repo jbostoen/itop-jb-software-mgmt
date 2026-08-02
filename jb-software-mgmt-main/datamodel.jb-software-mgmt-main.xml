@@ -1170,8 +1170,6 @@
 				<db_key_field>id</db_key_field>
 				<naming>
 					<attributes>
-						<attribute id="softwareproduct_id"/>
-						<attribute id="type"/>
 						<attribute id="value"/>
 					</attributes>
 				</naming>

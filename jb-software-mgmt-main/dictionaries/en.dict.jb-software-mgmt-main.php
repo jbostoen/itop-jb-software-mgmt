@@ -135,7 +135,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Class:SoftwareProductExternalIdentifier' => 'Software Product External Identifier',
 	'Class:SoftwareProductExternalIdentifier+' => 'An identifier used to recognize a software product in an external system, such as a CPE (Common Platform Enumeration) or a package URL (purl). A product can have several identifiers, even of the same type (e.g. an older and a newer CPE naming for the same product).',
-	'Class:SoftwareProductExternalIdentifier/Name' => '%1$s | %2$s: %3$s',
+	'Class:SoftwareProductExternalIdentifier/Name' => '%1$s',
 	'Class:SoftwareProductExternalIdentifier/Attribute:softwareproduct_id' => 'Software product',
 	'Class:SoftwareProductExternalIdentifier/Attribute:softwareproduct_id+' => 'The software product this identifier belongs to.',
 	'Class:SoftwareProductExternalIdentifier/Attribute:type' => 'Type',
