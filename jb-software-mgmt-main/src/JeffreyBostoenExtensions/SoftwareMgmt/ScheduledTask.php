@@ -3,7 +3,7 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     See license.md
- * @version     3.2.260801
+ * @version     3.2.260804
  *
  */
 

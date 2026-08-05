@@ -205,6 +205,7 @@
 						<attributes>
 							<attribute id="softwareversion_id"/>
 							<attribute id="build_number"/>
+							<attribute id="target_hw"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
 					</rule>
@@ -222,6 +223,26 @@
 					<sql>build_number</sql>
 					<default_value/>
 					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="target_hw" xsi:type="AttributeEnum">
+					<sql>target_hw</sql>
+					<values>
+						<value id="x86">
+							<code>x86</code>
+						</value>
+						<value id="x64">
+							<code>x64</code>
+						</value>
+						<value id="arm">
+							<code>arm</code>
+						</value>
+						<value id="arm64">
+							<code>arm64</code>
+						</value>
+					</values>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+					<display_style>list</display_style>
 				</field>
 				<field id="softwarereleasetype_id" xsi:type="AttributeExternalKey">
 					<sql>softwarereleasetype_id</sql>
@@ -335,6 +356,9 @@
 						<item id="build_number">
 							<rank>21</rank>
 						</item>
+						<item id="target_hw">
+							<rank>22</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -360,6 +384,9 @@
 						<item id="build_number">
 							<rank>21</rank>
 						</item>
+						<item id="target_hw">
+							<rank>22</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -382,6 +409,9 @@
 						<item id="build_number">
 							<rank>21</rank>
 						</item>
+						<item id="target_hw">
+							<rank>22</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -403,6 +433,9 @@
 						</item>
 						<item id="build_number">
 							<rank>21</rank>
+						</item>
+						<item id="target_hw">
+							<rank>22</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
@@ -1420,6 +1453,11 @@
 					<ext_key_to_remote>softwarelicense_id</ext_key_to_remote>
 					<display_style>tab</display_style>
 				</field>
+				<field id="softwareversionexternalidentifiers_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareVersionExternalIdentifier</linked_class>
+					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+					<edit_mode>add_only</edit_mode>
+				</field>
 				<field id="tags" xsi:type="AttributeTagSet">
 					<sql>tags</sql>
 					<is_null_allowed>true</is_null_allowed>
@@ -1454,6 +1492,9 @@
 						</item>
 						<item id="softwarelicenses_list">
 							<rank>903</rank>
+						</item>
+						<item id="softwareversionexternalidentifiers_list">
+							<rank>905</rank>
 						</item>
 					</items>
 				</details>
@@ -1493,6 +1534,129 @@
 						</item>
 						<item id="end_of_life_date">
 							<rank>31</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="SoftwareVersionExternalIdentifier" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_version_identifier</db_table>
+				<db_key_field>id</db_key_field>
+				<naming>
+					<attributes>
+						<attribute id="value"/>
+					</attributes>
+				</naming>
+				<order>
+					<columns>
+						<column id="softwareversion_id" ascending="true"/>
+						<column id="type" ascending="true"/>
+					</columns>
+				</order>
+				<reconciliation>
+					<attributes>
+						<attribute id="softwareversion_id"/>
+						<attribute id="type"/>
+						<attribute id="value"/>
+					</attributes>
+				</reconciliation>
+				<style>
+					<icon/>
+				</style>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareVersionExternalIdentifier">
+						<attributes>
+							<attribute id="softwareversion_id"/>
+							<attribute id="type"/>
+							<attribute id="value"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
+					<sql>softwareversion_id</sql>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>SoftwareVersion</target_class>
+				</field>
+				<field id="type" xsi:type="AttributeEnum">
+					<values>
+						<value id="cpe">
+							<code>cpe</code>
+						</value>
+						<value id="purl">
+							<code>purl</code>
+						</value>
+						<value id="repology">
+							<code>repology</code>
+						</value>
+					</values>
+					<sql>type</sql>
+					<default_value>cpe</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="value" xsi:type="AttributeString">
+					<sql>value</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="value">
+							<rank>21</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="value">
+							<rank>21</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="value">
+							<rank>21</rank>
 						</item>
 					</items>
 				</list>
@@ -1664,6 +1828,7 @@
 			<class id="SoftwareProduct" _delta="define"/>
 			<class id="SoftwareProductExternalIdentifier" _delta="define"/>
 			<class id="SoftwareVersion" _delta="define"/>
+			<class id="SoftwareVersionExternalIdentifier" _delta="define"/>
 		</group>
 	</user_rights>
 </itop_design>

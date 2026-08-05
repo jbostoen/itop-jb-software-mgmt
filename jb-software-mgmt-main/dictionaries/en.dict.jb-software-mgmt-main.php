@@ -2,7 +2,7 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     3.2.260801
+ * @version     3.2.260804
  *
  * Localized data
  */
@@ -21,6 +21,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareBuild/Name' => '%1$s | %2$s',
 	'Class:SoftwareBuild/Attribute:build_number' => 'Build number',
 	'Class:SoftwareBuild/Attribute:build_number+' => 'The full build number.',
+	'Class:SoftwareBuild/Attribute:target_hw' => 'Architecture',
+	'Class:SoftwareBuild/Attribute:target_hw+' => 'The target hardware architecture of this specific build - e.g. two builds sharing the same build number can still be different, architecture-specific artifacts (a Node.js x64 build vs its arm64 build of the same version). Left empty when not relevant or not tracked.',
+	'Class:SoftwareBuild/Attribute:target_hw/Value:x86' => 'x86',
+	'Class:SoftwareBuild/Attribute:target_hw/Value:x64' => 'x64',
+	'Class:SoftwareBuild/Attribute:target_hw/Value:arm' => 'ARM',
+	'Class:SoftwareBuild/Attribute:target_hw/Value:arm64' => 'ARM64',
 	'Class:SoftwareBuild/Attribute:release_date' => 'Release date',
 	'Class:SoftwareBuild/Attribute:release_date+' => 'On which date this build was released.',
 	'Class:SoftwareBuild/Attribute:softwarereleasetype_id' => 'Release type',
@@ -38,7 +44,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareBuild/Attribute:status/Value:unsupported' => 'Unsupported',
 	'Class:SoftwareBuild/Attribute:tags' => 'Tags',
 	'Class:SoftwareBuild/Attribute:tags+' => 'Any tags that could be used to categorize this software build.',
-	'Class:SoftwareBuild/UniquenessRule:UniqueSoftwareBuildPerSoftwareVersion' => 'The combination of the software build and version must be unique.',
+	'Class:SoftwareBuild/UniquenessRule:UniqueSoftwareBuildPerSoftwareVersion' => 'The combination of the software version, build number and architecture must be unique - the same build number is allowed more than once per version if it targets a different architecture.',
 	
 	'Class:SoftwareInstallation' => 'Software Installation',
 	'Class:SoftwareInstallation+' => 'Software installation on a physical or virtual device.',
@@ -174,7 +180,26 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareVersion/Attribute:softwarebuilds_list+' => 'Builds of this software version.',
 	'Class:SoftwareVersion/Attribute:softwarelicenses_list' => 'Licenses',
 	'Class:SoftwareVersion/Attribute:softwarelicenses_list+' => 'Licenses for this software version.',
+	'Class:SoftwareVersion/Attribute:softwareversionexternalidentifiers_list' => 'External identifiers',
+	'Class:SoftwareVersion/Attribute:softwareversionexternalidentifiers_list+' => 'Identifiers (CPE, purl, ...) that apply to this specific version, rather than to the product as a whole - e.g. for a vendor that bakes the version into its own CPE product name (like Microsoft does for Windows Server). Takes priority over the product\'s own identifiers for this version\'s builds when present.',
 	'Class:SoftwareVersion/UniquenessRule:UniqueSoftwareVersionPerSoftwareProduct' => 'The combination of a software (name) and version must be unique.',
+
+	'Class:SoftwareVersionExternalIdentifier' => 'Software Version External Identifier',
+	'Class:SoftwareVersionExternalIdentifier+' => 'An identifier used to recognize a specific software version in an external system, such as a CPE (Common Platform Enumeration) or a package URL (purl) - for vendors whose external identifier scheme is per-version rather than per-product (e.g. Microsoft registers "windows_server_2019" and "windows_server_2022" as distinct CPE products, not as versions of one "windows_server" CPE product). A version can have several identifiers, even of the same type.',
+	'Class:SoftwareVersionExternalIdentifier/Name' => '%1$s',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:softwareversion_id' => 'Software version',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:softwareversion_id+' => 'The software version this identifier belongs to.',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type' => 'Type',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type+' => 'The kind of identifier.',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type/Value:cpe' => 'CPE',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type/Value:cpe+' => 'Common Platform Enumeration, e.g. "cpe:2.3:o:microsoft:windows_server_2019".',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type/Value:purl' => 'Package URL (purl)',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type/Value:purl+' => 'Package URL, e.g. "pkg:npm/example".',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type/Value:repology' => 'Repology',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:type/Value:repology+' => 'Repology project identifier.',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:value' => 'Identifier',
+	'Class:SoftwareVersionExternalIdentifier/Attribute:value+' => 'The raw identifier value, e.g. "cpe:2.3:o:microsoft:windows_server_2019" or "pkg:npm/example".',
+	'Class:SoftwareVersionExternalIdentifier/UniquenessRule:UniqueSoftwareVersionExternalIdentifier' => 'The combination of the software version, identifier type and value must be unique.',
 
 	'Class:lnkSoftwareLicenseToContact' => 'Link License / Contact',
 	'Class:lnkSoftwareLicenseToContact+' => 'Link between License and Contact',
