@@ -45,7 +45,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareBuild/Attribute:tags' => 'Tags',
 	'Class:SoftwareBuild/Attribute:tags+' => 'Any tags that could be used to categorize this software build.',
 	'Class:SoftwareBuild/UniquenessRule:UniqueSoftwareBuildPerSoftwareVersion' => 'The combination of the software version, build number and architecture must be unique - the same build number is allowed more than once per version if it targets a different architecture.',
-	
+
+	'Class:SoftwareComponent' => 'Software Component',
+	'Class:SoftwareComponent+' => 'A component that can be shared across several software versions, such as a bundled library or module.',
+	'Class:SoftwareComponent/Attribute:name' => 'Name',
+	'Class:SoftwareComponent/Attribute:name+' => 'Name of the component. Must be unique.',
+	'Class:SoftwareComponent/Attribute:description' => 'Description',
+	'Class:SoftwareComponent/Attribute:description+' => 'The description of this component.',
+	'Class:SoftwareComponent/Attribute:softwareversions_list' => 'Software versions',
+	'Class:SoftwareComponent/Attribute:softwareversions_list+' => 'Software versions that reference this component.',
+	'Class:SoftwareComponent/UniquenessRule:UniqueSoftwareComponent' => 'The name of the component must be unique.',
+
 	'Class:SoftwareInstallation' => 'Software Installation',
 	'Class:SoftwareInstallation+' => 'Software installation on a physical or virtual device.',
 	'Class:SoftwareInstallation/Name' => '%1$s | %2$s (%3$s)',
@@ -159,6 +169,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareReleaseType' => 'Software Release type',
 	'Class:SoftwareReleaseType+' => 'A software release type. Vendors can follow a specific release type naming convention, such as "Alpha", "Beta", "Release Candidate", "General Availability", ...',
 
+	'Class:SoftwareSKU' => 'Software SKU',
+	'Class:SoftwareSKU+' => 'A stock keeping unit (SKU) that can be linked to one or more software versions.',
+	'Class:SoftwareSKU/Attribute:name' => 'Name',
+	'Class:SoftwareSKU/Attribute:name+' => 'Name of the SKU. Must be unique.',
+	'Class:SoftwareSKU/Attribute:description' => 'Description',
+	'Class:SoftwareSKU/Attribute:description+' => 'The description of this SKU.',
+	'Class:SoftwareSKU/Attribute:softwareversions_list' => 'Software versions',
+	'Class:SoftwareSKU/Attribute:softwareversions_list+' => 'Software versions linked to this SKU.',
+	'Class:SoftwareSKU/UniquenessRule:UniqueSoftwareSKU' => 'The name of the SKU must be unique.',
+
 	'Class:SoftwareVersion' => 'Software Version',
 	'Class:SoftwareVersion/Name' => '%1$s | %2$s',
 	'Class:SoftwareVersion+' => 'The software version contains info about the version of a software, such as the major/minor version, build number, edition/SKU, ...',
@@ -166,6 +186,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareVersion/Attribute:org_id+' => 'Organization where this software is used',
 	'Class:SoftwareVersion/Attribute:softwareproduct_id' => 'Software',
 	'Class:SoftwareVersion/Attribute:softwareproduct_id+' => 'Software name',
+	'Class:SoftwareVersion/Attribute:softwarecomponent_id' => 'Component',
+	'Class:SoftwareVersion/Attribute:softwarecomponent_id+' => 'The component this software version is built from or bundles, if applicable.',
 	'Class:SoftwareVersion/Attribute:version' => 'Version',
 	'Class:SoftwareVersion/Attribute:version+' => 'Version of this software. Could be a name, major/minor version, ... . Note that detailed info (e.g. build number) will be stored in the properties of the software installation.',
 	'Class:SoftwareVersion/Attribute:edition' => 'Edition (SKU)',
@@ -180,6 +202,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareVersion/Attribute:softwarebuilds_list+' => 'Builds of this software version.',
 	'Class:SoftwareVersion/Attribute:softwarelicenses_list' => 'Licenses',
 	'Class:SoftwareVersion/Attribute:softwarelicenses_list+' => 'Licenses for this software version.',
+	'Class:SoftwareVersion/Attribute:softwareskus_list' => 'SKUs',
+	'Class:SoftwareVersion/Attribute:softwareskus_list+' => 'SKUs linked to this software version.',
 	'Class:SoftwareVersion/Attribute:softwareversionexternalidentifiers_list' => 'External identifiers',
 	'Class:SoftwareVersion/Attribute:softwareversionexternalidentifiers_list+' => 'Identifiers (CPE, purl, ...) that apply to this specific version, rather than to the product as a whole - e.g. for a vendor that bakes the version into its own CPE product name (like Microsoft does for Windows Server). Takes priority over the product\'s own identifiers for this version\'s builds when present.',
 	'Class:SoftwareVersion/UniquenessRule:UniqueSoftwareVersionPerSoftwareProduct' => 'The combination of a software (name) and version must be unique.',
@@ -218,8 +242,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkSoftwareLicenseToSoftwareVersion/Attribute:license_name' => 'License name',
 	'Class:lnkSoftwareLicenseToSoftwareVersion/Attribute:softwareversion_id' => 'Software version',
 	'Class:lnkSoftwareLicenseToSoftwareVersion/Attribute:softwareversion_name' => 'Software version name',
-	'Class:lnkSoftwareLicenseToSoftwareVersion/UniquenessRule:UniqueSoftwareVersionAndLicense' => 'The combination of the license and software version must be unique.'
+	'Class:lnkSoftwareLicenseToSoftwareVersion/UniquenessRule:UniqueSoftwareVersionAndLicense' => 'The combination of the license and software version must be unique.',
 
-	
+	'Class:lnkSoftwareSKUToSoftwareVersion' => 'Link SKU / Software Version',
+	'Class:lnkSoftwareSKUToSoftwareVersion+' => 'Link between SKU and Software Version',
+	'Class:lnkSoftwareSKUToSoftwareVersion/Name' => '%1$s | %2$s',
+	'Class:lnkSoftwareSKUToSoftwareVersion/Attribute:softwaresku_id' => 'SKU',
+	'Class:lnkSoftwareSKUToSoftwareVersion/Attribute:sku_name' => 'SKU name',
+	'Class:lnkSoftwareSKUToSoftwareVersion/Attribute:softwareversion_id' => 'Software version',
+	'Class:lnkSoftwareSKUToSoftwareVersion/UniquenessRule:UniqueSoftwareSKUAndVersion' => 'The combination of the SKU and software version must be unique.'
+
+
 ));
 

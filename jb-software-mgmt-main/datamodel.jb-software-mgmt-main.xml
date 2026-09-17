@@ -171,6 +171,95 @@
 				</list>
 			</presentation>
 		</class>
+		<class id="lnkSoftwareSKUToSoftwareVersion" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<is_link>1</is_link>
+				<category>bizmodel</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_lnkskutoversion</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="softwaresku_id"/>
+						<attribute id="softwareversion_id"/>
+					</attributes>
+				</naming>
+				<style>
+					<icon/>
+				</style>
+				<reconciliation>
+					<attributes>
+						<attribute id="softwaresku_id"/>
+						<attribute id="softwareversion_id"/>
+					</attributes>
+				</reconciliation>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareSKUAndVersion">
+						<attributes>
+							<attribute id="softwaresku_id"/>
+							<attribute id="softwareversion_id"/>
+						</attributes>
+						<filter><![CDATA[]]></filter>
+						<disabled>false</disabled>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="softwaresku_id" xsi:type="AttributeExternalKey">
+					<sql>softwaresku_id</sql>
+					<target_class>SoftwareSKU</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="sku_name" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwaresku_id</extkey_attcode>
+					<target_attcode>name</target_attcode>
+				</field>
+				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
+					<sql>softwareversion_id</sql>
+					<target_class>SoftwareVersion</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwaresku_id">
+							<rank>10</rank>
+						</item>
+						<item id="softwareversion_id">
+							<rank>20</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="softwaresku_id">
+							<rank>10</rank>
+						</item>
+						<item id="softwareversion_id">
+							<rank>20</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="softwaresku_id">
+							<rank>10</rank>
+						</item>
+						<item id="softwareversion_id">
+							<rank>20</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
 		<class id="SoftwareBuild" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
@@ -1371,6 +1460,193 @@
 				</list>
 			</presentation>
 		</class>
+		<class id="SoftwareComponent" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable,structure</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_component</db_table>
+				<db_key_field>id</db_key_field>
+				<naming>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</naming>
+				<order>
+					<columns>
+						<column id="name" ascending="true"/>
+					</columns>
+				</order>
+				<reconciliation>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</reconciliation>
+				<style>
+					<icon/>
+				</style>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareComponent">
+						<attributes>
+							<attribute id="name"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="name" xsi:type="AttributeString">
+					<sql>name</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="description" xsi:type="AttributeHTML">
+					<sql>description</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="softwareversions_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareVersion</linked_class>
+					<ext_key_to_me>softwarecomponent_id</ext_key_to_me>
+					<edit_mode>add_only</edit_mode>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="description">
+							<rank>11</rank>
+						</item>
+						<item id="softwareversions_list">
+							<rank>901</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="description">
+							<rank>11</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="SoftwareSKU" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable,structure</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_sku</db_table>
+				<db_key_field>id</db_key_field>
+				<naming>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</naming>
+				<order>
+					<columns>
+						<column id="name" ascending="true"/>
+					</columns>
+				</order>
+				<reconciliation>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</reconciliation>
+				<style>
+					<icon/>
+				</style>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareSKU">
+						<attributes>
+							<attribute id="name"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="name" xsi:type="AttributeString">
+					<sql>name</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+				<field id="description" xsi:type="AttributeHTML">
+					<sql>description</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+				<field id="softwareversions_list" xsi:type="AttributeLinkedSetIndirect">
+					<linked_class>lnkSoftwareSKUToSoftwareVersion</linked_class>
+					<ext_key_to_me>softwaresku_id</ext_key_to_me>
+					<ext_key_to_remote>softwareversion_id</ext_key_to_remote>
+					<display_style>tab</display_style>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="description">
+							<rank>11</rank>
+						</item>
+						<item id="softwareversions_list">
+							<rank>901</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="name">
+							<rank>1</rank>
+						</item>
+						<item id="description">
+							<rank>11</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
 		<class id="SoftwareVersion" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
@@ -1422,6 +1698,17 @@
 					<extkey_attcode>softwareproduct_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
+				<field id="softwarecomponent_id" xsi:type="AttributeExternalKey">
+					<sql>softwarecomponent_id</sql>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>SoftwareComponent</target_class>
+					<allow_target_creation>true</allow_target_creation>
+				</field>
+				<field id="softwarecomponent_id_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwarecomponent_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
 				<field id="version" xsi:type="AttributeString">
 					<sql>version</sql>
 					<default_value/>
@@ -1453,6 +1740,12 @@
 					<ext_key_to_remote>softwarelicense_id</ext_key_to_remote>
 					<display_style>tab</display_style>
 				</field>
+				<field id="softwareskus_list" xsi:type="AttributeLinkedSetIndirect">
+					<linked_class>lnkSoftwareSKUToSoftwareVersion</linked_class>
+					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+					<ext_key_to_remote>softwaresku_id</ext_key_to_remote>
+					<display_style>tab</display_style>
+				</field>
 				<field id="softwareversionexternalidentifiers_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersionExternalIdentifier</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
@@ -1471,6 +1764,9 @@
 					<items>
 						<item id="softwareproduct_id">
 							<rank>11</rank>
+						</item>
+						<item id="softwarecomponent_id">
+							<rank>16</rank>
 						</item>
 						<item id="version">
 							<rank>21</rank>
@@ -1493,6 +1789,9 @@
 						<item id="softwarelicenses_list">
 							<rank>903</rank>
 						</item>
+						<item id="softwareskus_list">
+							<rank>904</rank>
+						</item>
 						<item id="softwareversionexternalidentifiers_list">
 							<rank>905</rank>
 						</item>
@@ -1502,6 +1801,9 @@
 					<items>
 						<item id="softwareproduct_id">
 							<rank>11</rank>
+						</item>
+						<item id="softwarecomponent_id">
+							<rank>16</rank>
 						</item>
 						<item id="version">
 							<rank>21</rank>
@@ -1516,6 +1818,9 @@
 						<item id="softwareproduct_id">
 							<rank>11</rank>
 						</item>
+						<item id="softwarecomponent_id">
+							<rank>16</rank>
+						</item>
 						<item id="version">
 							<rank>21</rank>
 						</item>
@@ -1528,6 +1833,9 @@
 					<items>
 						<item id="softwareproduct_id">
 							<rank>11</rank>
+						</item>
+						<item id="softwarecomponent_id">
+							<rank>16</rank>
 						</item>
 						<item id="version">
 							<rank>21</rank>
@@ -1780,6 +2088,14 @@
 								<rank>1.13</rank>
 								<class>SoftwareBuild</class>
 							</dashlet>
+							<dashlet id="sw_14" xsi:type="DashletBadge" _delta="define">
+								<rank>1.14</rank>
+								<class>SoftwareComponent</class>
+							</dashlet>
+							<dashlet id="sw_15" xsi:type="DashletBadge" _delta="define">
+								<rank>1.15</rank>
+								<class>SoftwareSKU</class>
+							</dashlet>
 							<dashlet id="sw_21" xsi:type="DashletBadge" _delta="define">
 								<rank>1.21</rank>
 								<class>SoftwareInstallation</class>
@@ -1823,10 +2139,12 @@
 			<class id="Software" _delta="delete_if_exists"/>
 			<class id="Patch" _delta="delete_if_exists"/>
 			<class id="SoftwareBuild" _delta="define"/>
+			<class id="SoftwareComponent" _delta="define"/>
 			<class id="SoftwareInstallation" _delta="define"/>
 			<class id="SoftwareLicense" _delta="define"/>
 			<class id="SoftwareProduct" _delta="define"/>
 			<class id="SoftwareProductExternalIdentifier" _delta="define"/>
+			<class id="SoftwareSKU" _delta="define"/>
 			<class id="SoftwareVersion" _delta="define"/>
 			<class id="SoftwareVersionExternalIdentifier" _delta="define"/>
 		</group>
