@@ -1,36 +1,23 @@
 <mxfile host="app.diagrams.net" agent="jb-software-mgmt" version="24.0.0">
-  <diagram id="sw-component-sku" name="SoftwareComponent and SoftwareSKU">
-    <mxGraphModel dx="1300" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="880" math="0" shadow="0">
+  <diagram id="sw-mgmt-overview" name="Software Management - Core classes">
+    <mxGraphModel dx="1300" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="800" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <mxCell id="title" value="Software Management &#45;&#45; SoftwareComponent / SoftwareSKU (issue #12, partial view of the datamodel)" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="title" value="Software Management &#45;&#45; core class overview (partial view of the datamodel)" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="20" width="900" height="30" as="geometry" />
-        </mxCell>
-
-        <mxCell id="legendNew" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="40" y="800" width="20" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="legendNewLabel" value="New class (issue #12)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="70" y="798" width="220" height="24" as="geometry" />
-        </mxCell>
-        <mxCell id="legendExisting" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="300" y="800" width="20" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="legendExistingLabel" value="Existing class (context)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="330" y="798" width="220" height="24" as="geometry" />
         </mxCell>
 
         <mxCell id="product" value="&lt;b&gt;SoftwareProduct&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;name * (unique)&lt;br&gt;vendor_id &#45;&gt; Organization&lt;br&gt;type" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="520" y="80" width="240" height="100" as="geometry" />
         </mxCell>
 
-        <mxCell id="component" value="&lt;b&gt;SoftwareComponent&lt;/b&gt; (NEW)&lt;hr size=&quot;1&quot;/&gt;name * (unique)&lt;br&gt;description" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="component" value="&lt;b&gt;SoftwareComponent&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;name * (unique)&lt;br&gt;description" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="140" y="300" width="220" height="90" as="geometry" />
         </mxCell>
 
-        <mxCell id="version" value="&lt;b&gt;SoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareproduct_id * &#45;&gt; SoftwareProduct&lt;br&gt;softwarecomponent_id &#45;&gt; SoftwareComponent (optional, NEW)&lt;br&gt;version&lt;br&gt;edition&lt;br&gt;description&lt;br&gt;end_of_life_date" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="version" value="&lt;b&gt;SoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareproduct_id * &#45;&gt; SoftwareProduct&lt;br&gt;softwarecomponent_id &#45;&gt; SoftwareComponent (optional)&lt;br&gt;version&lt;br&gt;edition&lt;br&gt;description&lt;br&gt;end_of_life_date" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="520" y="280" width="260" height="150" as="geometry" />
         </mxCell>
 
@@ -38,11 +25,11 @@
           <mxGeometry x="520" y="520" width="260" height="100" as="geometry" />
         </mxCell>
 
-        <mxCell id="sku" value="&lt;b&gt;SoftwareSKU&lt;/b&gt; (NEW)&lt;hr size=&quot;1&quot;/&gt;name * (unique)&lt;br&gt;description" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="sku" value="&lt;b&gt;SoftwareSKU&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;name * (unique)&lt;br&gt;description" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="920" y="80" width="220" height="90" as="geometry" />
         </mxCell>
 
-        <mxCell id="lnkSku" value="&lt;b&gt;lnkSoftwareSKUToSoftwareVersion&lt;/b&gt; (NEW)&lt;hr size=&quot;1&quot;/&gt;softwaresku_id * &#45;&gt; SoftwareSKU&lt;br&gt;softwareversion_id * &#45;&gt; SoftwareVersion" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="lnkSku" value="&lt;b&gt;lnkSoftwareSKUToSoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwaresku_id * &#45;&gt; SoftwareSKU&lt;br&gt;softwareversion_id * &#45;&gt; SoftwareVersion" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="920" y="280" width="240" height="90" as="geometry" />
         </mxCell>
 
