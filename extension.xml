@@ -9,6 +9,7 @@
 	<release_date>2026-07-29</release_date>
 	<version_description><![CDATA[]]></version_description>
 	<itop_version_min>3.2.0</itop_version_min>
+	<itop_version_max>3.2.9999</itop_version_max>
 	<status>stable</status>
 	<mandatory>false</mandatory>
 	<more_info_url>https://jeffreybostoen.be</more_info_url>
