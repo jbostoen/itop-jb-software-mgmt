@@ -66,8 +66,13 @@ class EventListenerPersonal implements iEventServiceSetup {
             'version_id' => $oObj->Get('softwareversion_id')
         ]);
         
+        // - No product found: nothing to recompute.
+        if($oProduct === null) {
+            return;
+        }
+
         // - With re-entrance protection active; it would not correctly update its own status.
-            
+
             MetaModel::StopReentranceProtection($oObj);
             Helper::UpdateStatusOfSoftwareBuilds([ $oProduct->GetKey() ], []);
             MetaModel::StartReentranceProtection($oObj);
@@ -101,8 +106,13 @@ class EventListenerPersonal implements iEventServiceSetup {
             'version_id' => $oObj->Get('softwareversion_id')
         ]);
         
+        // - No product found (e.g. the version or product is being deleted as well): nothing to recompute.
+        if($oProduct === null) {
+            return;
+        }
+
         // - Other builds may need to be updated (e.g. if latest was just deleted, another one should be promoted).
-            Helper::UpdateStatusOfSoftwareBuilds([ $oProduct->GetKey() ], [ $oObj->Get('softwarevesion_id') ]);
+            Helper::UpdateStatusOfSoftwareBuilds([ $oProduct->GetKey() ], [ $oObj->Get('softwareversion_id') ]);
 
 
     }
