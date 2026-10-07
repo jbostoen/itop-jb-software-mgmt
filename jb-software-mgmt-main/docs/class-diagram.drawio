@@ -17,8 +17,8 @@
           <mxGeometry x="140" y="300" width="220" height="90" as="geometry" />
         </mxCell>
 
-        <mxCell id="version" value="&lt;b&gt;SoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareproduct_id * &#45;&gt; SoftwareProduct&lt;br&gt;softwarecomponent_id &#45;&gt; SoftwareComponent (optional)&lt;br&gt;version&lt;br&gt;edition&lt;br&gt;description&lt;br&gt;end_of_life_date" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="520" y="280" width="260" height="150" as="geometry" />
+        <mxCell id="version" value="&lt;b&gt;SoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareproduct_id * &#45;&gt; SoftwareProduct&lt;br&gt;softwarecomponent_id &#45;&gt; SoftwareComponent (optional)&lt;br&gt;version&lt;br&gt;edition&lt;br&gt;description&lt;br&gt;end_of_life_date&lt;br&gt;is_lts, is_maintained, is_latest (yes / no / unknown)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="520" y="280" width="260" height="170" as="geometry" />
         </mxCell>
 
         <mxCell id="build" value="&lt;b&gt;SoftwareBuild&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareversion_id * &#45;&gt; SoftwareVersion&lt;br&gt;build_number&lt;br&gt;target_hw&lt;br&gt;..." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
@@ -39,6 +39,10 @@
 
         <mxCell id="license" value="&lt;b&gt;SoftwareLicense&lt;/b&gt; (parent: FunctionalCI)&lt;hr size=&quot;1&quot;/&gt;name *&lt;br&gt;type&lt;br&gt;..." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="920" y="660" width="220" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lifecycleEvent" value="&lt;b&gt;SoftwareVersionLifecycleEvent&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareversion_id * &#45;&gt; SoftwareVersion&lt;br&gt;type * (release, end_of_sales, end_of_active_support, end_of_security_support, end_of_extended_support)&lt;br&gt;date (optional)&lt;br&gt;unique: version + type" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="140" y="480" width="300" height="130" as="geometry" />
         </mxCell>
 
         <mxCell id="eProductVersion" value="1 -- 0..n" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;fontSize=11;endArrow=none;startArrow=none;" edge="1" parent="1" source="product" target="version">
@@ -66,6 +70,10 @@
         </mxCell>
 
         <mxCell id="eLnkLicenseLicense" value="0..n -- 1" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;fontSize=11;endArrow=none;startArrow=none;" edge="1" parent="1" source="lnkLicense" target="license">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="eVersionLifecycleEvent" value="1 -- 0..n" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;fontSize=11;endArrow=none;startArrow=none;" edge="1" parent="1" source="version" target="lifecycleEvent">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 

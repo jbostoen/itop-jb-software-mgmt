@@ -1729,6 +1729,57 @@
 					<default_value/>
 					<is_null_allowed>true</is_null_allowed>
 				</field>
+				<field id="is_lts" xsi:type="AttributeEnum">
+					<sql>is_lts</sql>
+					<values>
+						<value id="unknown">
+							<code>unknown</code>
+						</value>
+						<value id="yes">
+							<code>yes</code>
+						</value>
+						<value id="no">
+							<code>no</code>
+						</value>
+					</values>
+					<default_value>unknown</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="is_maintained" xsi:type="AttributeEnum">
+					<sql>is_maintained</sql>
+					<values>
+						<value id="unknown">
+							<code>unknown</code>
+						</value>
+						<value id="yes">
+							<code>yes</code>
+						</value>
+						<value id="no">
+							<code>no</code>
+						</value>
+					</values>
+					<default_value>unknown</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="is_latest" xsi:type="AttributeEnum">
+					<sql>is_latest</sql>
+					<values>
+						<value id="unknown">
+							<code>unknown</code>
+						</value>
+						<value id="yes">
+							<code>yes</code>
+						</value>
+						<value id="no">
+							<code>no</code>
+						</value>
+					</values>
+					<default_value>unknown</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="softwarebuilds_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareBuild</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
@@ -1751,6 +1802,11 @@
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
+				<field id="softwareversionlifecycleevents_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareVersionLifecycleEvent</linked_class>
+					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+					<edit_mode>add_only</edit_mode>
+				</field>
 				<field id="tags" xsi:type="AttributeTagSet">
 					<sql>tags</sql>
 					<is_null_allowed>true</is_null_allowed>
@@ -1758,7 +1814,42 @@
 					<tag_code_max_len>20</tag_code_max_len>
 				</field>
 			</fields>
-			<methods/>
+			<methods>
+				<method id="GetInitialStateAttributeFlags">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+
+				public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+
+					if($sAttCode === 'is_maintained') {
+						return OPT_ATT_READONLY;
+					}
+
+					return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+
+				}
+					]]>					</code>
+				</method>
+				<method id="GetAttributeFlags">
+					<static>false</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+
+				public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+
+					if($sAttCode === 'is_maintained') {
+						return OPT_ATT_READONLY;
+					}
+
+					return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
+				}
+					]]>					</code>
+				</method>
+			</methods>
 			<presentation>
 				<details>
 					<items>
@@ -1780,6 +1871,15 @@
 						<item id="end_of_life_date">
 							<rank>61</rank>
 						</item>
+						<item id="is_lts">
+							<rank>71</rank>
+						</item>
+						<item id="is_maintained">
+							<rank>72</rank>
+						</item>
+						<item id="is_latest">
+							<rank>73</rank>
+						</item>
 						<item id="tags">
 							<rank>801</rank>
 						</item>
@@ -1794,6 +1894,9 @@
 						</item>
 						<item id="softwareversionexternalidentifiers_list">
 							<rank>905</rank>
+						</item>
+						<item id="softwareversionlifecycleevents_list">
+							<rank>906</rank>
 						</item>
 					</items>
 				</details>
@@ -1811,6 +1914,15 @@
 						<item id="end_of_life_date">
 							<rank>31</rank>
 						</item>
+						<item id="is_lts">
+							<rank>32</rank>
+						</item>
+						<item id="is_maintained">
+							<rank>33</rank>
+						</item>
+						<item id="is_latest">
+							<rank>34</rank>
+						</item>
 					</items>
 				</search>
 				<default_search>
@@ -1827,6 +1939,9 @@
 						<item id="end_of_life_date">
 							<rank>31</rank>
 						</item>
+						<item id="is_maintained">
+							<rank>33</rank>
+						</item>
 					</items>
 				</default_search>
 				<list>
@@ -1842,6 +1957,147 @@
 						</item>
 						<item id="end_of_life_date">
 							<rank>31</rank>
+						</item>
+						<item id="is_lts">
+							<rank>32</rank>
+						</item>
+						<item id="is_maintained">
+							<rank>33</rank>
+						</item>
+						<item id="is_latest">
+							<rank>34</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="SoftwareVersionLifecycleEvent" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_version_lifecycle_event</db_table>
+				<db_key_field>id</db_key_field>
+				<naming>
+					<attributes>
+						<attribute id="softwareversion_id_friendlyname"/>
+						<attribute id="type"/>
+					</attributes>
+				</naming>
+				<order>
+					<columns>
+						<column id="softwareversion_id" ascending="true"/>
+						<column id="date" ascending="true"/>
+					</columns>
+				</order>
+				<reconciliation>
+					<attributes>
+						<attribute id="softwareversion_id"/>
+						<attribute id="type"/>
+					</attributes>
+				</reconciliation>
+				<style>
+					<icon/>
+				</style>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareVersionLifecycleEvent">
+						<attributes>
+							<attribute id="softwareversion_id"/>
+							<attribute id="type"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
+					<sql>softwareversion_id</sql>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>SoftwareVersion</target_class>
+				</field>
+				<field id="softwareversion_id_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwareversion_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
+				<field id="type" xsi:type="AttributeEnum">
+					<sql>type</sql>
+					<values>
+						<value id="release">
+							<code>release</code>
+						</value>
+						<value id="end_of_sales">
+							<code>end_of_sales</code>
+						</value>
+						<value id="end_of_active_support">
+							<code>end_of_active_support</code>
+						</value>
+						<value id="end_of_security_support">
+							<code>end_of_security_support</code>
+						</value>
+						<value id="end_of_extended_support">
+							<code>end_of_extended_support</code>
+						</value>
+					</values>
+					<default_value>release</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="date" xsi:type="AttributeDate">
+					<sql>date</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="date">
+							<rank>21</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="date">
+							<rank>21</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="softwareversion_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="date">
+							<rank>21</rank>
 						</item>
 					</items>
 				</list>
@@ -2147,6 +2403,7 @@
 			<class id="SoftwareSKU" _delta="define"/>
 			<class id="SoftwareVersion" _delta="define"/>
 			<class id="SoftwareVersionExternalIdentifier" _delta="define"/>
+			<class id="SoftwareVersionLifecycleEvent" _delta="define"/>
 		</group>
 	</user_rights>
 </itop_design>

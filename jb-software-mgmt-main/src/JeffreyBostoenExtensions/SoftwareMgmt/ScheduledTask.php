@@ -56,6 +56,9 @@ class ScheduledTask implements iScheduledProcess {
 			
 			// - Ensure integrity on the "status" of the SoftwareBuild.
 				Helper::UpdateStatusOfSoftwareBuilds([], []);
+
+			// - The "is_maintained" flag changes when a date passes.
+				Helper::UpdateIsMaintained([]);
 			
 		}
 		catch(Exception $e) {

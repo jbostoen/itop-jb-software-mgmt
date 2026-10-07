@@ -14,6 +14,7 @@ use DBObjectSearch;
 use DBObjectSet;
 use MetaModel;
 use SoftwareBuild;
+use SoftwareVersionLifecycleEvent;
 
 /**
  * Class EventListenerPersonal. Several personal event listeners.
@@ -35,6 +36,18 @@ class EventListenerPersonal implements iEventServiceSetup {
             EVENT_DB_AFTER_DELETE,
             [$this, 'AfterDeleteSoftwareBuild'],
             SoftwareBuild::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_AFTER_WRITE,
+            [$this, 'AfterWriteLifecycleEvent'],
+            SoftwareVersionLifecycleEvent::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_AFTER_DELETE,
+            [$this, 'AfterDeleteLifecycleEvent'],
+            SoftwareVersionLifecycleEvent::class
         );
 
     }
@@ -114,6 +127,65 @@ class EventListenerPersonal implements iEventServiceSetup {
         // - Other builds may need to be updated (e.g. if latest was just deleted, another one should be promoted).
             Helper::UpdateStatusOfSoftwareBuilds([ $oProduct->GetKey() ], [ $oObj->Get('softwareversion_id') ]);
 
+
+    }
+
+    /**
+     * After a lifecycle event is saved, keep the "is_maintained" flag and the end-of-life date of the software version(s) in line.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function AfterWriteLifecycleEvent(EventData $oEventData) {
+
+        /** @var SoftwareVersionLifecycleEvent $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        $aPrevious = $oObj->ListPreviousValuesForUpdatedAttributes();
+
+        $iVersionId = (int)$oObj->Get('softwareversion_id');
+        $iPreviousVersionId = (int)($aPrevious['softwareversion_id'] ?? $iVersionId);
+        $sPreviousType = ($aPrevious['type'] ?? $oObj->Get('type'));
+        $sPreviousDate = (array_key_exists('date', $aPrevious) ? $aPrevious['date'] : $oObj->Get('date'));
+
+        $sOldDate = ($sPreviousType === Helper::EVENT_TYPE_END_OF_SECURITY_SUPPORT && !empty($sPreviousDate) ? $sPreviousDate : null);
+        $sNewDate = ($oObj->Get('type') === Helper::EVENT_TYPE_END_OF_SECURITY_SUPPORT && !empty($oObj->Get('date')) ? $oObj->Get('date') : null);
+
+        Helper::Trace('Update the lifecycle flags due to a saved lifecycle event.');
+
+        // - The event moved to another version: the previous one loses it.
+        if($iPreviousVersionId !== $iVersionId) {
+            Helper::SyncEndOfLifeDate($iPreviousVersionId, $sOldDate, null);
+            $sOldDate = null;
+        }
+
+        Helper::SyncEndOfLifeDate($iVersionId, $sOldDate, $sNewDate);
+        Helper::UpdateIsMaintained(array_unique([$iVersionId, $iPreviousVersionId]));
+
+    }
+
+    /**
+     * After a lifecycle event is deleted, keep the "is_maintained" flag and the end-of-life date of the software version in line.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function AfterDeleteLifecycleEvent(EventData $oEventData) {
+
+        /** @var SoftwareVersionLifecycleEvent $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        $iVersionId = (int)$oObj->Get('softwareversion_id');
+
+        Helper::Trace('Update the lifecycle flags due to a deleted lifecycle event.');
+
+        if($oObj->Get('type') === Helper::EVENT_TYPE_END_OF_SECURITY_SUPPORT && !empty($oObj->Get('date'))) {
+            Helper::SyncEndOfLifeDate($iVersionId, $oObj->Get('date'), null);
+        }
+
+        Helper::UpdateIsMaintained([$iVersionId]);
 
     }
 
