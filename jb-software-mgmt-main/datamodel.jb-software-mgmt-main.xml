@@ -2030,6 +2030,9 @@
 						<value id="end_of_sales">
 							<code>end_of_sales</code>
 						</value>
+						<value id="discontinued">
+							<code>discontinued</code>
+						</value>
 						<value id="end_of_active_support">
 							<code>end_of_active_support</code>
 						</value>

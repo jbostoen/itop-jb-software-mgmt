@@ -253,6 +253,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:release+' => 'The version was released.',
 	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:end_of_sales' => 'End of sales',
 	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:end_of_sales+' => 'The version is no longer sold.',
+	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:discontinued' => 'Discontinued',
+	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:discontinued+' => 'The vendor discontinued this version (it will not be developed or released further). Not the same as the end of sales or of support.',
 	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:end_of_active_support' => 'End of active support',
 	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:end_of_active_support+' => 'The end of regular (mainstream) support, such as bug fixes and new features.',
 	'Class:SoftwareVersionLifecycleEvent/Attribute:type/Value:end_of_security_support' => 'End of security support',
