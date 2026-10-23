@@ -12,8 +12,10 @@ use Combodo\iTop\Service\Events\{EventData, EventService, iEventServiceSetup};
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
+use Dict;
 use MetaModel;
 use SoftwareBuild;
+use SoftwareVersion;
 use SoftwareVersionLifecycleEvent;
 
 /**
@@ -39,6 +41,12 @@ class EventListenerPersonal implements iEventServiceSetup {
         );
 
         EventService::RegisterListener(
+            EVENT_DB_CHECK_TO_WRITE,
+            [$this, 'CheckToWriteSoftwareVersion'],
+            SoftwareVersion::class
+        );
+
+        EventService::RegisterListener(
             EVENT_DB_AFTER_WRITE,
             [$this, 'AfterWriteLifecycleEvent'],
             SoftwareVersionLifecycleEvent::class
@@ -49,6 +57,42 @@ class EventListenerPersonal implements iEventServiceSetup {
             [$this, 'AfterDeleteLifecycleEvent'],
             SoftwareVersionLifecycleEvent::class
         );
+
+    }
+
+
+    /**
+     * Warns when another software version of the same software has the same codename. A warning, not an error: it does not stop the save.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function CheckToWriteSoftwareVersion(EventData $oEventData) {
+
+        /** @var SoftwareVersion $oVersion The object. */
+        $oVersion = $oEventData->Get('object');
+
+        $sCodename = trim((string)$oVersion->Get('codename'));
+
+        if($sCodename === '') {
+            return;
+        }
+
+        // - Nothing to check when neither the codename nor the software changed.
+        if(!$oVersion->IsNew() && count(array_intersect_key($oVersion->ListChanges(), ['codename' => true, 'softwareproduct_id' => true])) === 0) {
+            return;
+        }
+
+        $oOther = MetaModel::GetObjectFromOQL('SELECT SoftwareVersion WHERE softwareproduct_id = :product_id AND codename = :codename AND id != :id', [
+            'product_id' => $oVersion->Get('softwareproduct_id'),
+            'codename' => $sCodename,
+            'id' => (int)$oVersion->GetKey(),
+        ]);
+
+        if($oOther !== null) {
+            $oVersion->AddCheckWarning(Dict::Format('JBSoftwareMgmt:SoftwareVersion:DuplicateCodename', $sCodename, $oOther->GetName()));
+        }
 
     }
 
