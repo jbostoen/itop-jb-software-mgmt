@@ -17,8 +17,8 @@
           <mxGeometry x="140" y="300" width="220" height="90" as="geometry" />
         </mxCell>
 
-        <mxCell id="version" value="&lt;b&gt;SoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareproduct_id * &#45;&gt; SoftwareProduct&lt;br&gt;softwarecomponent_id &#45;&gt; SoftwareComponent (optional)&lt;br&gt;version&lt;br&gt;edition&lt;br&gt;description&lt;br&gt;end_of_life_date&lt;br&gt;is_lts, is_maintained, is_latest (yes / no / unknown)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="520" y="280" width="260" height="170" as="geometry" />
+        <mxCell id="version" value="&lt;b&gt;SoftwareVersion&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareproduct_id * &#45;&gt; SoftwareProduct&lt;br&gt;softwarecomponent_id &#45;&gt; SoftwareComponent (optional)&lt;br&gt;version&lt;br&gt;edition&lt;br&gt;codename (optional)&lt;br&gt;description&lt;br&gt;end_of_life_date&lt;br&gt;is_lts, is_maintained, is_latest (yes / no / unknown)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="520" y="280" width="260" height="190" as="geometry" />
         </mxCell>
 
         <mxCell id="build" value="&lt;b&gt;SoftwareBuild&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;softwareversion_id * &#45;&gt; SoftwareVersion&lt;br&gt;build_number&lt;br&gt;target_hw&lt;br&gt;..." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
