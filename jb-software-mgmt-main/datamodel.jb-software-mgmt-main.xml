@@ -399,6 +399,11 @@
 					<ext_key_to_me>softwarebuild_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
 				</field>
+				<field id="softwarebuildexternalidentifiers_list" xsi:type="AttributeLinkedSet">
+					<linked_class>SoftwareBuildExternalIdentifier</linked_class>
+					<ext_key_to_me>softwarebuild_id</ext_key_to_me>
+					<edit_mode>add_only</edit_mode>
+				</field>
 			</fields>
 			<methods>
 				<method id="GetInitialStateAttributeFlags">
@@ -462,6 +467,9 @@
 						</item>
 						<item id="softwareinstallations_list">
 							<rank>902</rank>
+						</item>
+						<item id="softwarebuildexternalidentifiers_list">
+							<rank>903</rank>
 						</item>
 					</items>
 				</details>
@@ -2243,6 +2251,129 @@
 				</list>
 			</presentation>
 		</class>
+		<class id="SoftwareBuildExternalIdentifier" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<category>bizmodel,searchable</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_build_identifier</db_table>
+				<db_key_field>id</db_key_field>
+				<naming>
+					<attributes>
+						<attribute id="value"/>
+					</attributes>
+				</naming>
+				<order>
+					<columns>
+						<column id="softwarebuild_id" ascending="true"/>
+						<column id="type" ascending="true"/>
+					</columns>
+				</order>
+				<reconciliation>
+					<attributes>
+						<attribute id="softwarebuild_id"/>
+						<attribute id="type"/>
+						<attribute id="value"/>
+					</attributes>
+				</reconciliation>
+				<style>
+					<icon/>
+				</style>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareBuildExternalIdentifier">
+						<attributes>
+							<attribute id="softwarebuild_id"/>
+							<attribute id="type"/>
+							<attribute id="value"/>
+						</attributes>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="softwarebuild_id" xsi:type="AttributeExternalKey">
+					<sql>softwarebuild_id</sql>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+					<target_class>SoftwareBuild</target_class>
+				</field>
+				<field id="type" xsi:type="AttributeEnum">
+					<values>
+						<value id="cpe">
+							<code>cpe</code>
+						</value>
+						<value id="purl">
+							<code>purl</code>
+						</value>
+						<value id="repology">
+							<code>repology</code>
+						</value>
+					</values>
+					<sql>type</sql>
+					<default_value>cpe</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
+				<field id="value" xsi:type="AttributeString">
+					<sql>value</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwarebuild_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="value">
+							<rank>21</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="softwarebuild_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="value">
+							<rank>21</rank>
+						</item>
+					</items>
+				</search>
+				<default_search>
+					<items>
+						<item id="softwarebuild_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+					</items>
+				</default_search>
+				<list>
+					<items>
+						<item id="softwarebuild_id">
+							<rank>1</rank>
+						</item>
+						<item id="type">
+							<rank>11</rank>
+						</item>
+						<item id="value">
+							<rank>21</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
 		<class id="WebApplication">
 			<properties>
 				<naming>
@@ -2412,6 +2543,7 @@
 			<class id="Software" _delta="delete_if_exists"/>
 			<class id="Patch" _delta="delete_if_exists"/>
 			<class id="SoftwareBuild" _delta="define"/>
+			<class id="SoftwareBuildExternalIdentifier" _delta="define"/>
 			<class id="SoftwareComponent" _delta="define"/>
 			<class id="SoftwareInstallation" _delta="define"/>
 			<class id="SoftwareLicense" _delta="define"/>
