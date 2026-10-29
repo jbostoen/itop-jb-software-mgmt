@@ -22,7 +22,9 @@ It aims to overcome some challenges:
 - The overhead of OS patches and software patches. In modern environments, it usually means a new version of a specific software.
 - The complexity of modern licenses (a license can cover an organization, a user, a device; it can contain downgrade rights; ...).
 
-This aims to replace the regular iTop Software Catalog and Software instances.  
+This aims to replace the regular iTop Software Catalog and Software instances.
+
+The linked sets of the datamodel (versions, builds, identifiers, installations, ...) have tracking level `none`: a change to the content of a list is not recorded in the history of the parent object.  
 It will NOT delete the existing data from the database by default; but it will make the old info invisible for the users.  
 Unfortunately, the relevant original classes in iTop are part of a large module in iTop.
 
