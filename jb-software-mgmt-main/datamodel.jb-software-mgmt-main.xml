@@ -296,6 +296,7 @@
 							<attribute id="softwareversion_id"/>
 							<attribute id="build_number"/>
 							<attribute id="target_hw"/>
+							<attribute id="platform_id"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
 					</rule>
@@ -333,6 +334,18 @@
 					<default_value/>
 					<is_null_allowed>true</is_null_allowed>
 					<display_style>list</display_style>
+				</field>
+				<field id="platform_id" xsi:type="AttributeExternalKey">
+					<sql>platform_id</sql>
+					<filter><![CDATA[SELECT SoftwareVersion AS v JOIN SoftwareProduct AS p ON v.softwareproduct_id = p.id WHERE p.type = 'operating_system']]></filter>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_MANUAL</on_target_delete>
+					<target_class>SoftwareVersion</target_class>
+					<allow_target_creation>false</allow_target_creation>
+				</field>
+				<field id="platform_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>platform_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
 				</field>
 				<field id="softwarereleasetype_id" xsi:type="AttributeExternalKey">
 					<sql>softwarereleasetype_id</sql>
@@ -456,6 +469,9 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
+						<item id="platform_id">
+							<rank>23</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -487,6 +503,9 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
+						<item id="platform_id">
+							<rank>23</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -512,6 +531,9 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
+						<item id="platform_id">
+							<rank>23</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -536,6 +558,9 @@
 						</item>
 						<item id="target_hw">
 							<rank>22</rank>
+						</item>
+						<item id="platform_id">
+							<rank>23</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>

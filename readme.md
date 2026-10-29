@@ -24,6 +24,10 @@ It aims to overcome some challenges:
 
 This aims to replace the regular iTop Software Catalog and Software instances.
 
+A software build has an optional **platform**: the operating system (a software version of a software product of the type *Operating system*, such as Ubuntu 24.04) it is made for.
+The same build number can exist once per platform; a build without platform stays valid. See `docs/platforms.md` of [jb-software-mgmt-server](https://github.com/jbostoen/itop-jb-software-mgmt-server)
+for how the platform is filled in and used.
+
 The linked sets of the datamodel (versions, builds, identifiers, installations, ...) have tracking level `none`: a change to the content of a list is not recorded in the history of the parent object.  
 It will NOT delete the existing data from the database by default; but it will make the old info invisible for the users.  
 Unfortunately, the relevant original classes in iTop are part of a large module in iTop.
