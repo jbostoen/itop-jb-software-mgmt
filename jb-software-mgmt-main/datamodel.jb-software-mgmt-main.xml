@@ -68,6 +68,7 @@
 					<linked_class _delta="redefine">SoftwareInstallation</linked_class>
 					<ext_key_to_me _delta="redefine">functionalci_id</ext_key_to_me>
 					<edit_mode _delta="redefine">add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 			</fields>
 			<relations>
@@ -398,11 +399,13 @@
 					<linked_class>SoftwareInstallation</linked_class>
 					<ext_key_to_me>softwarebuild_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwarebuildexternalidentifiers_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareBuildExternalIdentifier</linked_class>
 					<ext_key_to_me>softwarebuild_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 			</fields>
 			<methods>
@@ -963,11 +966,13 @@
 					<ext_key_to_me>softwarelicense_id</ext_key_to_me>
 					<ext_key_to_remote>softwareversion_id</ext_key_to_remote>
 					<display_style>tab</display_style>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwareinstallations_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareInstallation</linked_class>
 					<ext_key_to_me>softwarelicense_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 			</fields>
 			<methods/>
@@ -1215,11 +1220,13 @@
 					<linked_class>SoftwareVersion</linked_class>
 					<ext_key_to_me>softwareproduct_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwareproductexternalidentifiers_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareProductExternalIdentifier</linked_class>
 					<ext_key_to_me>softwareproduct_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="tags" xsi:type="AttributeTagSet">
 					<sql>tags</sql>
@@ -1518,6 +1525,7 @@
 					<linked_class>SoftwareVersion</linked_class>
 					<ext_key_to_me>softwarecomponent_id</ext_key_to_me>
 					<edit_mode>none</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 			</fields>
 			<methods/>
@@ -1612,6 +1620,7 @@
 					<ext_key_to_me>softwaresku_id</ext_key_to_me>
 					<ext_key_to_remote>softwareversion_id</ext_key_to_remote>
 					<display_style>tab</display_style>
+					<tracking_level>none</tracking_level>
 				</field>
 			</fields>
 			<methods/>
@@ -1797,28 +1806,33 @@
 					<linked_class>SoftwareBuild</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwarelicenses_list" xsi:type="AttributeLinkedSetIndirect">
 					<linked_class>lnkSoftwareLicenseToSoftwareVersion</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<ext_key_to_remote>softwarelicense_id</ext_key_to_remote>
 					<display_style>tab</display_style>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwareskus_list" xsi:type="AttributeLinkedSetIndirect">
 					<linked_class>lnkSoftwareSKUToSoftwareVersion</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<ext_key_to_remote>softwaresku_id</ext_key_to_remote>
 					<display_style>tab</display_style>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwareversionexternalidentifiers_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersionExternalIdentifier</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="softwareversionlifecycleevents_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersionLifecycleEvent</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
 					<edit_mode>add_only</edit_mode>
+					<tracking_level>none</tracking_level>
 				</field>
 				<field id="tags" xsi:type="AttributeTagSet">
 					<sql>tags</sql>
