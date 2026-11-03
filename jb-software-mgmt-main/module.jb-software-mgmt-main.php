@@ -3,14 +3,14 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     3.2.261028
+ * @version     3.2.261103
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
         __FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-        'jb-software-mgmt-main/3.2.261028',
+        'jb-software-mgmt-main/3.2.261103',
         array(
                 // Identification
                 //
@@ -31,6 +31,7 @@ SetupWebPage::AddModule(
                 //
                 'datamodel' => array(
 			'model.jb-software-mgmt-main.php',
+                        'src/JeffreyBostoenExtensions/SoftwareMgmt/DebianVersion.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/EventListeners.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/Helper.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/Logger.php',

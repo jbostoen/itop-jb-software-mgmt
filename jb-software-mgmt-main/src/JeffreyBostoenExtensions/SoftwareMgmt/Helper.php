@@ -47,7 +47,7 @@ abstract class Helper {
      * 
      * It will mark:
      * - Builds as unsupported if the software version's end of life date passed.
-     * - Builds as latest if they are the latest build for their software version and release type.
+     * - Builds as latest if they are the latest build for their software version, release type and platform.
      * 
      * @param int[] $iTargetProductIds Optional. The product IDs to check. If empty, all products will be checked.
      * @param int[] $iTargetVersionIds Optional. The version IDs to check. If empty, all versions will be checked.
@@ -78,7 +78,7 @@ abstract class Helper {
                         softwareproduct_id = :softwareproduct_id'
                 );
                 if(count($iTargetVersionIds) > 0) {
-                    $oFilterProducts->AddCondition('id', $iTargetVersionIds, 'IN');
+                    $oFilterVersions->AddCondition('id', $iTargetVersionIds, 'IN');
                 }
 
                 $oSetVersions = new DBObjectSet($oFilterVersions, [], [
@@ -116,42 +116,36 @@ abstract class Helper {
                         }
 
                     // - Check if latest.
-                    //   To do so, create a map of the release type and latest build number found.
-                    //   Then, go over the builds again and mark them as latest or outdated.
+                    //   Builds are grouped by platform and release type: a build is only compared with the builds for the same platform.
+                    //   Per group, the latest build number is determined; then the builds are marked as latest or outdated.
+                    //   Multiple builds of one software version can thus be the latest (one per platform).
 
-                        $aReleaseTypeToLatestBuildNumber = [];
+                        $aGroupToLatestBuildNumber = [];
+                        $aBuilds = [];
 
                         while($oBuild = $oSetBuilds->Fetch()) {
 
-                            $sReleaseTypeId = $oBuild->Get('softwarereleasetype_id');
-                            $sBuildNumber = $oBuild->Get('build_number');
+                            $sGroup = static::GetBuildGroup($oBuild);
+                            $sBuildNumber = (string)$oBuild->Get('build_number');
+                            $aBuilds[] = [$oBuild, $sGroup, $sBuildNumber];
 
-                            if(!isset($aReleaseTypeToLatestBuildNumber[$sReleaseTypeId]) || version_compare($sBuildNumber, $aReleaseTypeToLatestBuildNumber[$sReleaseTypeId], '>')) {
-                                $aReleaseTypeToLatestBuildNumber[$sReleaseTypeId] = $sBuildNumber;
+                            if(!isset($aGroupToLatestBuildNumber[$sGroup]) || static::CompareBuildNumbers($sBuildNumber, $aGroupToLatestBuildNumber[$sGroup], $oBuild) > 0) {
+                                $aGroupToLatestBuildNumber[$sGroup] = $sBuildNumber;
                             }
 
                         }
 
-                        $oSetBuilds->Rewind();
+                        foreach($aBuilds as [$oBuild, $sGroup, $sBuildNumber]) {
 
-                        while($oBuild = $oSetBuilds->Fetch()) {
+                            $sStatus = ($sBuildNumber === $aGroupToLatestBuildNumber[$sGroup] ? 'latest' : 'outdated');
 
-
-                            $sReleaseTypeId = $oBuild->Get('softwarereleasetype_id');
-                            $sBuildNumber = $oBuild->Get('build_number');
-
-                            if($sBuildNumber === $aReleaseTypeToLatestBuildNumber[$sReleaseTypeId]) {
-                                $oBuild->Set('status', 'latest');
-                            } 
-                            else {
-                                $oBuild->Set('status', 'outdated');
+                            // - Only write what changed.
+                            if($oBuild->Get('status') !== $sStatus) {
+                                $oBuild->Set('status', $sStatus);
+                                $oBuild->DBUpdate();
                             }
 
-                            $oBuild->DBUpdate();
-
                         }
-                    
-
 
                 }
 
@@ -165,6 +159,64 @@ abstract class Helper {
 
     
     
+
+    /**
+     * @param DBObject $oBuild A software build.
+     *
+     * @return string The group in which the build competes for being the latest: its release type and its platform.
+     */
+    protected static function GetBuildGroup(DBObject $oBuild) : string {
+
+        return sprintf('%1$d|%2$d', (int)$oBuild->Get('softwarereleasetype_id'), (int)$oBuild->Get('platform_id'));
+
+    }
+
+
+    /**
+     * @param string $sBuildNumberA
+     * @param string $sBuildNumberB
+     * @param DBObject $oBuild A build of the group: its platform decides how build numbers are compared.
+     *
+     * @return int Negative when A is older than B, 0 when equal, positive when A is newer.
+     */
+    protected static function CompareBuildNumbers(string $sBuildNumberA, string $sBuildNumberB, DBObject $oBuild) : int {
+
+        return (static::IsDebianPlatform((int)$oBuild->Get('platform_id')) ? DebianVersion::Compare($sBuildNumberA, $sBuildNumberB) : version_compare($sBuildNumberA, $sBuildNumberB));
+
+    }
+
+
+    /**
+     * @param int $iPlatformId Key of a software version that is the platform of a build. 0 for none.
+     *
+     * @return bool Whether the platform is a version of Debian or Ubuntu: the build numbers are the versions of deb packages.
+     */
+    protected static function IsDebianPlatform(int $iPlatformId) : bool {
+
+        static $aCache = [];
+
+        if($iPlatformId <= 0) {
+            return false;
+        }
+
+        if(!isset($aCache[$iPlatformId])) {
+
+            $oProduct = MetaModel::GetObjectFromOQL('
+                SELECT SoftwareProduct AS sp 
+                JOIN SoftwareVersion AS sv ON sv.softwareproduct_id = sp.id
+                WHERE sv.id = :version_id
+            ', [
+                'version_id' => $iPlatformId,
+            ]);
+
+            $aCache[$iPlatformId] = ($oProduct !== null && in_array(strtolower(trim((string)$oProduct->Get('name'))), ['debian', 'ubuntu'], true));
+
+        }
+
+        return $aCache[$iPlatformId];
+
+    }
+
 
     /**
      * Recomputes "is_maintained" of software versions, based on their lifecycle events.
