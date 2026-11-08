@@ -2225,6 +2225,9 @@
 						<value id="repology">
 							<code>repology</code>
 						</value>
+						<value id="intune">
+							<code>intune</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value>cpe</default_value>
@@ -2347,6 +2350,9 @@
 						</value>
 						<value id="repology">
 							<code>repology</code>
+						</value>
+						<value id="intune">
+							<code>intune</code>
 						</value>
 					</values>
 					<sql>type</sql>
