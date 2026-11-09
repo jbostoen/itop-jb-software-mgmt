@@ -74,8 +74,8 @@ class EventListenerPersonal implements iEventServiceSetup {
 
 
     /**
-     * Fills the platform product of a software build from its platform version, when only the version is set (code, imports and
-     * older clients only know the version).
+     * Fills the platform product of a software build from its platform version, and the platform family from the platform product, when
+     * only the lower one is set (code, imports and older clients only know the version or the product).
      *
      * @param EventData $oEventData
      *
@@ -88,14 +88,25 @@ class EventListenerPersonal implements iEventServiceSetup {
 
         $iVersionId = (int)$oBuild->Get('platform_version_id');
 
-        if($iVersionId <= 0 || (int)$oBuild->Get('platform_product_id') > 0) {
-            return;
+        if($iVersionId > 0 && (int)$oBuild->Get('platform_product_id') <= 0) {
+
+            $oVersion = MetaModel::GetObject('SoftwareVersion', $iVersionId, false, true);
+
+            if($oVersion !== null) {
+                $oBuild->Set('platform_product_id', (int)$oVersion->Get('softwareproduct_id'));
+            }
+
         }
 
-        $oVersion = MetaModel::GetObject('SoftwareVersion', $iVersionId, false, true);
+        // - A build that is not about a platform ("na", "unknown") takes the family of its platform product.
+        if((int)$oBuild->Get('platform_product_id') > 0 && !Helper::IsPlatformFamily((string)$oBuild->Get('platform_family'))) {
 
-        if($oVersion !== null) {
-            $oBuild->Set('platform_product_id', (int)$oVersion->Get('softwareproduct_id'));
+            $oProduct = MetaModel::GetObject('SoftwareProduct', (int)$oBuild->Get('platform_product_id'), false, true);
+
+            if($oProduct !== null && (string)$oProduct->Get('platform_family') !== '') {
+                $oBuild->Set('platform_family', (string)$oProduct->Get('platform_family'));
+            }
+
         }
 
     }
@@ -116,18 +127,33 @@ class EventListenerPersonal implements iEventServiceSetup {
         $iVersionId = (int)$oBuild->Get('platform_version_id');
         $iProductId = (int)$oBuild->Get('platform_product_id');
 
-        if($iVersionId <= 0 || $iProductId <= 0) {
+        if($iProductId <= 0) {
             return;
         }
 
-        if(!$oBuild->IsNew() && count(array_intersect_key($oBuild->ListChanges(), ['platform_product_id' => true, 'platform_version_id' => true])) === 0) {
+        if(!$oBuild->IsNew() && count(array_intersect_key($oBuild->ListChanges(), ['platform_family' => true, 'platform_product_id' => true, 'platform_version_id' => true])) === 0) {
             return;
         }
 
-        $oVersion = MetaModel::GetObject('SoftwareVersion', $iVersionId, false, true);
+        if($iVersionId > 0) {
 
-        if($oVersion !== null && (int)$oVersion->Get('softwareproduct_id') !== $iProductId) {
-            $oBuild->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareBuild:PlatformVersionOfAnotherProduct', $oVersion->GetName(), $oBuild->Get('platform_product_id_friendlyname')));
+            $oVersion = MetaModel::GetObject('SoftwareVersion', $iVersionId, false, true);
+
+            if($oVersion !== null && (int)$oVersion->Get('softwareproduct_id') !== $iProductId) {
+                $oBuild->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareBuild:PlatformVersionOfAnotherProduct', $oVersion->GetName(), $oBuild->Get('platform_product_id_friendlyname')));
+            }
+
+        }
+
+        // - The family of the build is a real family: its platform product belongs to it.
+        if(Helper::IsPlatformFamily((string)$oBuild->Get('platform_family'))) {
+
+            $oProduct = MetaModel::GetObject('SoftwareProduct', $iProductId, false, true);
+
+            if($oProduct !== null && (string)$oProduct->Get('platform_family') !== '' && (string)$oProduct->Get('platform_family') !== (string)$oBuild->Get('platform_family')) {
+                $oBuild->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareBuild:PlatformProductOfAnotherFamily', $oProduct->GetName(), $oBuild->GetAsPlainText('platform_family')));
+            }
+
         }
 
     }

@@ -296,6 +296,7 @@
 							<attribute id="softwareversion_id"/>
 							<attribute id="build_number"/>
 							<attribute id="target_hw"/>
+							<attribute id="platform_family"/>
 							<attribute id="platform_product_id"/>
 							<attribute id="platform_version_id"/>
 						</attributes>
@@ -336,9 +337,48 @@
 					<is_null_allowed>true</is_null_allowed>
 					<display_style>list</display_style>
 				</field>
+				<field id="platform_family" xsi:type="AttributeEnum">
+					<sort_type>label</sort_type>
+					<values>
+						<value id="na">
+							<code>na</code>
+						</value>
+						<value id="windows">
+							<code>windows</code>
+						</value>
+						<value id="linux">
+							<code>linux</code>
+						</value>
+						<value id="macos">
+							<code>macos</code>
+						</value>
+						<value id="ios">
+							<code>ios</code>
+						</value>
+						<value id="android">
+							<code>android</code>
+						</value>
+						<value id="chromeos">
+							<code>chromeos</code>
+						</value>
+						<value id="bsd">
+							<code>bsd</code>
+						</value>
+						<value id="unknown">
+							<code>unknown</code>
+						</value>
+					</values>
+					<sql>platform_family</sql>
+					<default_value>na</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="platform_product_id" xsi:type="AttributeExternalKey">
 					<sql>platform_product_id</sql>
-					<filter><![CDATA[SELECT SoftwareProduct WHERE type = 'operating_system']]></filter>
+					<filter><![CDATA[SELECT SoftwareProduct WHERE type = 'operating_system' AND platform_family = :this->platform_family]]></filter>
+					<dependencies>
+						<attribute id="platform_family"/>
+					</dependencies>
 					<is_null_allowed>true</is_null_allowed>
 					<on_target_delete>DEL_MANUAL</on_target_delete>
 					<target_class>SoftwareProduct</target_class>
@@ -485,11 +525,14 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
-						<item id="platform_product_id">
+						<item id="platform_family">
 							<rank>23</rank>
 						</item>
-						<item id="platform_version_id">
+						<item id="platform_product_id">
 							<rank>24</rank>
+						</item>
+						<item id="platform_version_id">
+							<rank>25</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
@@ -522,11 +565,14 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
-						<item id="platform_product_id">
+						<item id="platform_family">
 							<rank>23</rank>
 						</item>
-						<item id="platform_version_id">
+						<item id="platform_product_id">
 							<rank>24</rank>
+						</item>
+						<item id="platform_version_id">
+							<rank>25</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
@@ -553,11 +599,14 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
-						<item id="platform_product_id">
+						<item id="platform_family">
 							<rank>23</rank>
 						</item>
-						<item id="platform_version_id">
+						<item id="platform_product_id">
 							<rank>24</rank>
+						</item>
+						<item id="platform_version_id">
+							<rank>25</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
@@ -584,11 +633,14 @@
 						<item id="target_hw">
 							<rank>22</rank>
 						</item>
-						<item id="platform_product_id">
+						<item id="platform_family">
 							<rank>23</rank>
 						</item>
-						<item id="platform_version_id">
+						<item id="platform_product_id">
 							<rank>24</rank>
+						</item>
+						<item id="platform_version_id">
+							<rank>25</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
@@ -1269,6 +1321,36 @@
 					<is_null_allowed>false</is_null_allowed>
 					<display_style>list</display_style>
 				</field>
+				<field id="platform_family" xsi:type="AttributeEnum">
+					<sort_type>label</sort_type>
+					<values>
+						<value id="windows">
+							<code>windows</code>
+						</value>
+						<value id="linux">
+							<code>linux</code>
+						</value>
+						<value id="macos">
+							<code>macos</code>
+						</value>
+						<value id="ios">
+							<code>ios</code>
+						</value>
+						<value id="android">
+							<code>android</code>
+						</value>
+						<value id="chromeos">
+							<code>chromeos</code>
+						</value>
+						<value id="bsd">
+							<code>bsd</code>
+						</value>
+					</values>
+					<sql>platform_family</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="softwareversions_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersion</linked_class>
 					<ext_key_to_me>softwareproduct_id</ext_key_to_me>
@@ -1301,6 +1383,9 @@
 						<item id="type">
 							<rank>21</rank>
 						</item>
+						<item id="platform_family">
+							<rank>22</rank>
+						</item>
 						<item id="tags">
 							<rank>801</rank>
 						</item>
@@ -1320,6 +1405,9 @@
 						<item id="type">
 							<rank>21</rank>
 						</item>
+						<item id="platform_family">
+							<rank>22</rank>
+						</item>
 					</items>
 				</search>
 				<default_search>
@@ -1333,6 +1421,9 @@
 						<item id="type">
 							<rank>21</rank>
 						</item>
+						<item id="platform_family">
+							<rank>22</rank>
+						</item>
 					</items>
 				</default_search>
 				<list>
@@ -1345,6 +1436,9 @@
 						</item>
 						<item id="type">
 							<rank>21</rank>
+						</item>
+						<item id="platform_family">
+							<rank>22</rank>
 						</item>
 					</items>
 				</list>

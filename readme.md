@@ -33,7 +33,21 @@ Android, Ubuntu). A **platform version** narrows it to one release of that opera
 | set | empty | Any release of the operating system ("for Windows"). |
 | set | set | One release of the operating system. |
 
-The platform product is filled from the platform version when only the version is set. The same build number can exist once per platform and release; a build without platform stays valid.
+The platform product is filled from the platform version when only the version is set.
+
+Above the platform product sits the **platform family** (Windows, Linux, macOS, iOS, Android, ChromeOS, BSD): an operating system product has one, and a build has one. The family of a build is
+never empty and defaults to *Not applicable* (a web application, a service or a library; also a build whose platform does not matter). *Unknown* exists, but its use is discouraged. The list of
+platform products only offers the operating systems of the chosen family, so a build can be "for Windows" without choosing between Microsoft Windows and Microsoft Windows Server, or "for Linux"
+without choosing a distribution. The family is filled from the platform product when only the product is set, and a platform product of another family is refused.
+
+| Platform family | Platform product | Platform version | Meaning |
+|---|---|---|---|
+| Not applicable | empty | empty | No platform, or it does not matter. |
+| Windows | empty | empty | For Windows, whatever the product or release. |
+| Windows | Microsoft Windows Server | empty | Any release of Windows Server. |
+| Windows | Microsoft Windows | 11 24H2 | One release. |
+
+The same build number can exist once per platform family, product and release; a build without platform stays valid.
 See `docs/platforms.md` of [jb-software-mgmt-server](https://github.com/jbostoen/itop-jb-software-mgmt-server) for how the platform is filled in and used.
 
 The linked sets of the datamodel (versions, builds, identifiers, installations, ...) have tracking level `none`: a change to the content of a list is not recorded in the history of the parent object.  

@@ -161,13 +161,25 @@ abstract class Helper {
     
 
     /**
+     * @param string $sFamily The platform family of a software build.
+     *
+     * @return bool Whether it names a platform: not empty, not "na" (not applicable) and not "unknown".
+     */
+    public static function IsPlatformFamily(string $sFamily) : bool {
+
+        return !in_array($sFamily, ['', 'na', 'unknown'], true);
+
+    }
+
+
+    /**
      * @param DBObject $oBuild A software build.
      *
      * @return string The group in which the build competes for being the latest: its release type and its platform (the operating system and its release).
      */
     protected static function GetBuildGroup(DBObject $oBuild) : string {
 
-        return sprintf('%1$d|%2$d|%3$d', (int)$oBuild->Get('softwarereleasetype_id'), (int)$oBuild->Get('platform_product_id'), (int)$oBuild->Get('platform_version_id'));
+        return sprintf('%1$d|%2$s|%3$d|%4$d', (int)$oBuild->Get('softwarereleasetype_id'), (static::IsPlatformFamily((string)$oBuild->Get('platform_family')) ? (string)$oBuild->Get('platform_family') : ''), (int)$oBuild->Get('platform_product_id'), (int)$oBuild->Get('platform_version_id'));
 
     }
 

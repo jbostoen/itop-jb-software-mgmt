@@ -194,6 +194,66 @@ if(!class_exists('SoftwareMgmtInstaller')) {
 
                                 }
 
+                                // - The platform family of the operating systems that are known by name, then of the builds that have a platform product. Only what is still empty.
+                                try {
+
+                                        if($sPreviousVersion !== '') {
+
+                                                SetupLog::Info('Fill the platform family of the operating systems and of the software builds.');
+
+                                                $aFamilies = [
+                                                        'Microsoft Windows' => 'windows',
+                                                        'Microsoft Windows Server' => 'windows',
+                                                        'Ubuntu' => 'linux',
+                                                        'Debian' => 'linux',
+                                                        'Android' => 'android',
+                                                        'iOS' => 'ios',
+                                                        'macOS' => 'macos',
+                                                ];
+
+                                                foreach($aFamilies as $sName => $sFamily) {
+
+                                                        $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareProduct WHERE name = :name AND type = \'operating_system\''), [], ['name' => $sName]);
+
+                                                        while($oProduct = $oSet->Fetch()) {
+
+                                                                if((string)$oProduct->Get('platform_family') === '') {
+                                                                        $oProduct->Set('platform_family', $sFamily);
+                                                                        $oProduct->DBUpdate();
+                                                                }
+
+                                                        }
+
+                                                }
+
+                                                $aFamilyByProduct = [];
+                                                $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareBuild WHERE platform_product_id > 0 AND platform_family = \'na\''));
+
+                                                while($oBuild = $oSet->Fetch()) {
+
+                                                        $iProductId = (int)$oBuild->Get('platform_product_id');
+
+                                                        if(!isset($aFamilyByProduct[$iProductId])) {
+                                                                $oProduct = MetaModel::GetObject('SoftwareProduct', $iProductId, false, true);
+                                                                $aFamilyByProduct[$iProductId] = ($oProduct === null ? '' : (string)$oProduct->Get('platform_family'));
+                                                        }
+
+                                                        if($aFamilyByProduct[$iProductId] !== '') {
+                                                                $oBuild->Set('platform_family', $aFamilyByProduct[$iProductId]);
+                                                                $oBuild->DBUpdate();
+                                                        }
+
+                                                }
+
+                                        }
+
+                                }
+                                catch(Exception $e) {
+
+                                        SetupLog::Error('Failed to fill the platform family: '.$e->GetMessage());
+
+                                }
+
                         
 			
 		}
