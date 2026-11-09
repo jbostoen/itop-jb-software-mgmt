@@ -41,6 +41,18 @@ class EventListenerPersonal implements iEventServiceSetup {
         );
 
         EventService::RegisterListener(
+            EVENT_DB_COMPUTE_VALUES,
+            [$this, 'ComputeValuesSoftwareBuild'],
+            SoftwareBuild::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_CHECK_TO_WRITE,
+            [$this, 'CheckToWriteSoftwareBuild'],
+            SoftwareBuild::class
+        );
+
+        EventService::RegisterListener(
             EVENT_DB_CHECK_TO_WRITE,
             [$this, 'CheckToWriteSoftwareVersion'],
             SoftwareVersion::class
@@ -57,6 +69,66 @@ class EventListenerPersonal implements iEventServiceSetup {
             [$this, 'AfterDeleteLifecycleEvent'],
             SoftwareVersionLifecycleEvent::class
         );
+
+    }
+
+
+    /**
+     * Fills the platform product of a software build from its platform version, when only the version is set (code, imports and
+     * older clients only know the version).
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function ComputeValuesSoftwareBuild(EventData $oEventData) {
+
+        /** @var SoftwareBuild $oBuild The object. */
+        $oBuild = $oEventData->Get('object');
+
+        $iVersionId = (int)$oBuild->Get('platform_version_id');
+
+        if($iVersionId <= 0 || (int)$oBuild->Get('platform_product_id') > 0) {
+            return;
+        }
+
+        $oVersion = MetaModel::GetObject('SoftwareVersion', $iVersionId, false, true);
+
+        if($oVersion !== null) {
+            $oBuild->Set('platform_product_id', (int)$oVersion->Get('softwareproduct_id'));
+        }
+
+    }
+
+
+    /**
+     * Refuses a platform version that is not a version of the platform product of the software build.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function CheckToWriteSoftwareBuild(EventData $oEventData) {
+
+        /** @var SoftwareBuild $oBuild The object. */
+        $oBuild = $oEventData->Get('object');
+
+        $iVersionId = (int)$oBuild->Get('platform_version_id');
+        $iProductId = (int)$oBuild->Get('platform_product_id');
+
+        if($iVersionId <= 0 || $iProductId <= 0) {
+            return;
+        }
+
+        if(!$oBuild->IsNew() && count(array_intersect_key($oBuild->ListChanges(), ['platform_product_id' => true, 'platform_version_id' => true])) === 0) {
+            return;
+        }
+
+        $oVersion = MetaModel::GetObject('SoftwareVersion', $iVersionId, false, true);
+
+        if($oVersion !== null && (int)$oVersion->Get('softwareproduct_id') !== $iProductId) {
+            $oBuild->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareBuild:PlatformVersionOfAnotherProduct', $oVersion->GetName(), $oBuild->Get('platform_product_id_friendlyname')));
+        }
 
     }
 

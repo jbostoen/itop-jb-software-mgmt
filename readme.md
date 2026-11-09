@@ -24,9 +24,17 @@ It aims to overcome some challenges:
 
 This aims to replace the regular iTop Software Catalog and Software instances.
 
-A software build has an optional **platform**: the operating system (a software version of a software product of the type *Operating system*, such as Ubuntu 24.04) it is made for.
-The same build number can exist once per platform; a build without platform stays valid. See `docs/platforms.md` of [jb-software-mgmt-server](https://github.com/jbostoen/itop-jb-software-mgmt-server)
-for how the platform is filled in and used.
+A software build has an optional **platform**: the operating system it is made for, as a software product of the type *Operating system* (the **platform product**: Microsoft Windows, iOS,
+Android, Ubuntu). A **platform version** narrows it to one release of that operating system (Ubuntu 24.04); the list only offers the versions of the platform product.
+
+| Platform product | Platform version | Meaning |
+|---|---|---|
+| empty | empty | Unspecified. |
+| set | empty | Any release of the operating system ("for Windows"). |
+| set | set | One release of the operating system. |
+
+The platform product is filled from the platform version when only the version is set. The same build number can exist once per platform and release; a build without platform stays valid.
+See `docs/platforms.md` of [jb-software-mgmt-server](https://github.com/jbostoen/itop-jb-software-mgmt-server) for how the platform is filled in and used.
 
 The linked sets of the datamodel (versions, builds, identifiers, installations, ...) have tracking level `none`: a change to the content of a list is not recorded in the history of the parent object.  
 It will NOT delete the existing data from the database by default; but it will make the old info invisible for the users.  

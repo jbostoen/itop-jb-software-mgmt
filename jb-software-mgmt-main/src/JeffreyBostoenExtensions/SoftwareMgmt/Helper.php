@@ -163,11 +163,11 @@ abstract class Helper {
     /**
      * @param DBObject $oBuild A software build.
      *
-     * @return string The group in which the build competes for being the latest: its release type and its platform.
+     * @return string The group in which the build competes for being the latest: its release type and its platform (the operating system and its release).
      */
     protected static function GetBuildGroup(DBObject $oBuild) : string {
 
-        return sprintf('%1$d|%2$d', (int)$oBuild->Get('softwarereleasetype_id'), (int)$oBuild->Get('platform_id'));
+        return sprintf('%1$d|%2$d|%3$d', (int)$oBuild->Get('softwarereleasetype_id'), (int)$oBuild->Get('platform_product_id'), (int)$oBuild->Get('platform_version_id'));
 
     }
 
@@ -181,7 +181,7 @@ abstract class Helper {
      */
     protected static function CompareBuildNumbers(string $sBuildNumberA, string $sBuildNumberB, DBObject $oBuild) : int {
 
-        return (static::IsDebianPlatform((int)$oBuild->Get('platform_id')) ? DebianVersion::Compare($sBuildNumberA, $sBuildNumberB) : version_compare($sBuildNumberA, $sBuildNumberB));
+        return (static::IsDebianPlatform((int)$oBuild->Get('platform_version_id')) ? DebianVersion::Compare($sBuildNumberA, $sBuildNumberB) : version_compare($sBuildNumberA, $sBuildNumberB));
 
     }
 

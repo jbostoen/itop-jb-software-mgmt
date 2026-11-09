@@ -3,14 +3,14 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     3.2.261103
+ * @version     3.2.261109
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
         __FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-        'jb-software-mgmt-main/3.2.261103',
+        'jb-software-mgmt-main/3.2.261109',
         array(
                 // Identification
                 //
@@ -98,6 +98,15 @@ if(!class_exists('SoftwareMgmtInstaller')) {
 
                                         }
 
+                                        // - The platform of a build is a platform version next to a platform product.
+                                        if($sPreviousVersion !== '' && version_compare($sPreviousVersion, '3.2.261109', '<')) {
+
+                                                SetupLog::Info('Rename the platform of a software build to the platform version.');
+
+                                                static::MoveColumnInDB('software_mgmt_build', 'platform_id', 'software_mgmt_build', 'platform_version_id');
+
+                                        }
+
                                 }
                                 catch(Exception $e) {
 
@@ -153,6 +162,35 @@ if(!class_exists('SoftwareMgmtInstaller')) {
                                 catch(Exception $e) {
 
                                         SetupLog::Error('Failed to add release types: '.$e->GetMessage());
+
+                                }
+
+                                // - The platform product of the builds that have a platform version.
+                                try {
+
+                                        if($sPreviousVersion !== '' && version_compare($sPreviousVersion, '3.2.261109', '<')) {
+
+                                                SetupLog::Info('Fill the platform product of the software builds that have a platform version.');
+
+                                                $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareBuild WHERE platform_version_id > 0 AND platform_product_id = 0'));
+
+                                                while($oBuild = $oSet->Fetch()) {
+
+                                                        $oVersion = MetaModel::GetObject('SoftwareVersion', (int)$oBuild->Get('platform_version_id'), false, true);
+
+                                                        if($oVersion !== null) {
+                                                                $oBuild->Set('platform_product_id', (int)$oVersion->Get('softwareproduct_id'));
+                                                                $oBuild->DBUpdate();
+                                                        }
+
+                                                }
+
+                                        }
+
+                                }
+                                catch(Exception $e) {
+
+                                        SetupLog::Error('Failed to fill the platform product of the software builds: '.$e->GetMessage());
 
                                 }
 
