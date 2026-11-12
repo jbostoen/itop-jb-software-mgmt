@@ -1623,6 +1623,177 @@
 				</list>
 			</presentation>
 		</class>
+		<class id="Localization" _delta="define">
+			<parent>Typology</parent>
+			<properties>
+				<category>bizmodel,searchable</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_localization</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="name"/>
+					</attributes>
+				</naming>
+				<icon/>
+				<reconciliation>
+					<attributes>
+						<attribute id="code"/>
+					</attributes>
+				</reconciliation>
+				<uniqueness_rules>
+					<rule id="UniqueLocalizationCode">
+						<attributes>
+							<attribute id="code"/>
+						</attributes>
+						<filter><![CDATA[]]></filter>
+						<disabled>false</disabled>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="code" xsi:type="AttributeString">
+					<sql>code</sql>
+					<default_value/>
+					<is_null_allowed>false</is_null_allowed>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="code">
+							<rank>10</rank>
+						</item>
+						<item id="name">
+							<rank>20</rank>
+						</item>
+					</items>
+				</details>
+				<default_search>
+					<items>
+						<item id="code">
+							<rank>10</rank>
+						</item>
+						<item id="name">
+							<rank>20</rank>
+						</item>
+					</items>
+				</default_search>
+				<search>
+					<items>
+						<item id="code">
+							<rank>10</rank>
+						</item>
+						<item id="name">
+							<rank>20</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="code">
+							<rank>10</rank>
+						</item>
+						<item id="name">
+							<rank>20</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+		<class id="lnkSoftwareVersionToLocalization" _delta="define">
+			<parent>cmdbAbstractObject</parent>
+			<properties>
+				<is_link>1</is_link>
+				<category>bizmodel</category>
+				<abstract>false</abstract>
+				<key_type>autoincrement</key_type>
+				<db_table>software_mgmt_lnkversiontolocalization</db_table>
+				<db_key_field>id</db_key_field>
+				<db_final_class_field/>
+				<naming>
+					<attributes>
+						<attribute id="softwareversion_id"/>
+						<attribute id="localization_id"/>
+					</attributes>
+				</naming>
+				<style>
+					<icon/>
+				</style>
+				<reconciliation>
+					<attributes>
+						<attribute id="softwareversion_id"/>
+						<attribute id="localization_id"/>
+					</attributes>
+				</reconciliation>
+				<uniqueness_rules>
+					<rule id="UniqueSoftwareVersionAndLocalization">
+						<attributes>
+							<attribute id="softwareversion_id"/>
+							<attribute id="localization_id"/>
+						</attributes>
+						<filter><![CDATA[]]></filter>
+						<disabled>false</disabled>
+						<is_blocking>true</is_blocking>
+					</rule>
+				</uniqueness_rules>
+			</properties>
+			<fields>
+				<field id="softwareversion_id" xsi:type="AttributeExternalKey">
+					<sql>softwareversion_id</sql>
+					<target_class>SoftwareVersion</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="localization_id" xsi:type="AttributeExternalKey">
+					<sql>localization_id</sql>
+					<target_class>Localization</target_class>
+					<is_null_allowed>false</is_null_allowed>
+					<on_target_delete>DEL_AUTO</on_target_delete>
+				</field>
+				<field id="localization_id_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>localization_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="softwareversion_id">
+							<rank>10</rank>
+						</item>
+						<item id="localization_id">
+							<rank>20</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="softwareversion_id">
+							<rank>10</rank>
+						</item>
+						<item id="localization_id">
+							<rank>20</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="softwareversion_id">
+							<rank>10</rank>
+						</item>
+						<item id="localization_id">
+							<rank>20</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
 		<class id="SoftwareComponent" _delta="define">
 			<parent>cmdbAbstractObject</parent>
 			<properties>
@@ -1970,6 +2141,13 @@
 					<display_style>tab</display_style>
 					<tracking_level>none</tracking_level>
 				</field>
+				<field id="localizations_list" xsi:type="AttributeLinkedSetIndirect">
+					<linked_class>lnkSoftwareVersionToLocalization</linked_class>
+					<ext_key_to_me>softwareversion_id</ext_key_to_me>
+					<ext_key_to_remote>localization_id</ext_key_to_remote>
+					<display_style>tab</display_style>
+					<tracking_level>none</tracking_level>
+				</field>
 				<field id="softwareversionexternalidentifiers_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersionExternalIdentifier</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
@@ -2075,6 +2253,9 @@
 						</item>
 						<item id="softwareversionlifecycleevents_list">
 							<rank>906</rank>
+						</item>
+						<item id="localizations_list">
+							<rank>907</rank>
 						</item>
 					</items>
 				</details>

@@ -53,6 +53,8 @@ Availability*, Dev is *Development*). The release type is part of the uniqueness
 of a build (latest, outdated, ...) is worked out per software version, release type and platform, so a Canary build never makes a Stable build outdated. Do not create separate software products or
 software versions per channel. The release type *Canary* is added on installation and on upgrade.
 
+A software version can be linked to the **localizations** (languages) it was seen in, such as `en-us`: a localization is a typology with a unique code (lowercase, with a hyphen) and a name. A language is not another software version, build or SKU: do not create those per language. About 150 common locales of Windows and Office are added on installation and on upgrade; a missing one is added, an existing one is never changed.
+
 The same build number can exist once per platform family, product and release; a build without platform stays valid.
 See `docs/platforms.md` of [jb-software-mgmt-server](https://github.com/jbostoen/itop-jb-software-mgmt-server) for how the platform is filled in and used.
 

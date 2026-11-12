@@ -34,6 +34,7 @@ SetupWebPage::AddModule(
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/DebianVersion.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/EventListeners.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/Helper.php',
+                        'src/JeffreyBostoenExtensions/SoftwareMgmt/Localizations.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/Logger.php',
                         'src/JeffreyBostoenExtensions/SoftwareMgmt/ScheduledTask.php',
                 ),
@@ -187,6 +188,31 @@ if(!class_exists('SoftwareMgmtInstaller')) {
                                 catch(Exception $e) {
 
                                         SetupLog::Error('Failed to add the release type Canary: '.$e->GetMessage());
+
+                                }
+
+                                // - The localizations: the codes that are missing are added; existing ones are never changed.
+                                try {
+
+                                        $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT Localization'));
+                                        $aExisting = [];
+
+                                        while($oLocalization = $oSet->Fetch()) {
+                                                $aExisting[mb_strtolower(trim((string)$oLocalization->Get('code')))] = true;
+                                        }
+
+                                        foreach(\JeffreyBostoenExtensions\SoftwareMgmt\Localizations::LIST as $sCode => $sName) {
+
+                                                if(!isset($aExisting[$sCode])) {
+                                                        MetaModel::NewObject('Localization', ['code' => $sCode, 'name' => $sName])->DBInsert();
+                                                }
+
+                                        }
+
+                                }
+                                catch(Exception $e) {
+
+                                        SetupLog::Error('Failed to add the localizations: '.$e->GetMessage());
 
                                 }
 
