@@ -3,14 +3,14 @@
 /**
  * @copyright   Copyright (c) 2019-2026 Jeffrey Bostoen
  * @license     https://www.gnu.org/licenses/gpl-3.0.en.html
- * @version     3.2.261109
+ * @version     3.2.261112
  *
  * iTop module definition file
  */
 
 SetupWebPage::AddModule(
         __FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-        'jb-software-mgmt-main/3.2.261109',
+        'jb-software-mgmt-main/3.2.261112',
         array(
                 // Identification
                 //
@@ -135,6 +135,7 @@ if(!class_exists('SoftwareMgmtInstaller')) {
                                                 $aReleaseTypes = [
                                                         'Alpha',
                                                         'Beta',
+                                                        'Canary',
                                                         'Development',
                                                         'General Availability (GA)',
                                                         'Long-Term Support (LTS)',
@@ -162,6 +163,30 @@ if(!class_exists('SoftwareMgmtInstaller')) {
                                 catch(Exception $e) {
 
                                         SetupLog::Error('Failed to add release types: '.$e->GetMessage());
+
+                                }
+
+                                // - The release type Canary (the most experimental channel of a product), when it is missing.
+                                try {
+
+                                        if($sPreviousVersion !== '' && version_compare($sPreviousVersion, '3.2.261112', '<')) {
+
+                                                $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareReleaseType WHERE name = :name'), [], ['name' => 'Canary']);
+
+                                                if($oSet->Count() === 0) {
+
+                                                        SetupLog::Info('Add the release type Canary.');
+
+                                                        MetaModel::NewObject('SoftwareReleaseType', ['name' => 'Canary'])->DBInsert();
+
+                                                }
+
+                                        }
+
+                                }
+                                catch(Exception $e) {
+
+                                        SetupLog::Error('Failed to add the release type Canary: '.$e->GetMessage());
 
                                 }
 

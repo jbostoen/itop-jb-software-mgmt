@@ -47,6 +47,12 @@ without choosing a distribution. The family is filled from the platform product 
 | Windows | Microsoft Windows Server | empty | Any release of Windows Server. |
 | Windows | Microsoft Windows | 11 24H2 | One release. |
 
+A software build also has an optional **release type** (Alpha, Beta, Canary, Development, General Availability, Long-Term Support, Preview, Release Candidate, ...). It tells the release channels of
+one product apart: Microsoft Edge is one software product, and its Stable, Beta, Dev and Canary channels are builds of the same software versions with another release type (Stable is *General
+Availability*, Dev is *Development*). The release type is part of the uniqueness of a build: a beta build that is promoted to stable with the same build number is a second build, not a duplicate. The status
+of a build (latest, outdated, ...) is worked out per software version, release type and platform, so a Canary build never makes a Stable build outdated. Do not create separate software products or
+software versions per channel. The release type *Canary* is added on installation and on upgrade.
+
 The same build number can exist once per platform family, product and release; a build without platform stays valid.
 See `docs/platforms.md` of [jb-software-mgmt-server](https://github.com/jbostoen/itop-jb-software-mgmt-server) for how the platform is filled in and used.
 

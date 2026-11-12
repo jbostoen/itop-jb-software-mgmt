@@ -299,6 +299,7 @@
 							<attribute id="platform_family"/>
 							<attribute id="platform_product_id"/>
 							<attribute id="platform_version_id"/>
+							<attribute id="softwarereleasetype_id"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
 					</rule>

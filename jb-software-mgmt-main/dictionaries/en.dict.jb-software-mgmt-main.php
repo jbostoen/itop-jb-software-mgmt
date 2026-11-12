@@ -76,7 +76,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareBuild/Attribute:status/Value:unsupported' => 'Unsupported',
 	'Class:SoftwareBuild/Attribute:tags' => 'Tags',
 	'Class:SoftwareBuild/Attribute:tags+' => 'Any tags that could be used to categorize this software build.',
-	'Class:SoftwareBuild/UniquenessRule:UniqueSoftwareBuildPerSoftwareVersion' => 'The combination of the software version, build number, architecture and platform must be unique - the same build number is allowed more than once per version if it targets a different architecture or platform.',
+	'Class:SoftwareBuild/UniquenessRule:UniqueSoftwareBuildPerSoftwareVersion' => 'The combination of the software version, build number, architecture, platform and release type must be unique - the same build number is allowed more than once per version if it targets a different architecture, platform or release type.',
 
 	'Class:SoftwareComponent' => 'Software Component',
 	'Class:SoftwareComponent+' => 'A component that can be shared across several software versions, such as a bundled library or module.',
