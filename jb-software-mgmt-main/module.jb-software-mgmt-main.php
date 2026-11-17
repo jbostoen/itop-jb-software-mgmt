@@ -305,6 +305,29 @@ if(!class_exists('SoftwareMgmtInstaller')) {
 
                                 }
 
+                                // - Only an operating system has a platform family on the software product: the family of the other software is the one of its builds.
+                                try {
+
+                                        if($sPreviousVersion !== '') {
+
+                                                SetupLog::Info('Empty the platform family of the software products that are not an operating system.');
+
+                                                $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareProduct WHERE type != \'operating_system\' AND platform_family != \'\''));
+
+                                                while($oProduct = $oSet->Fetch()) {
+                                                        $oProduct->Set('platform_family', '');
+                                                        $oProduct->DBUpdate();
+                                                }
+
+                                        }
+
+                                }
+                                catch(Exception $e) {
+
+                                        SetupLog::Error('Failed to empty the platform family of the software products that are not an operating system: '.$e->GetMessage());
+
+                                }
+
                         
 			
 		}

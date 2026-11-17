@@ -15,6 +15,7 @@ use DBObjectSet;
 use Dict;
 use MetaModel;
 use SoftwareBuild;
+use SoftwareProduct;
 use SoftwareVersion;
 use SoftwareVersionLifecycleEvent;
 
@@ -50,6 +51,12 @@ class EventListenerPersonal implements iEventServiceSetup {
             EVENT_DB_CHECK_TO_WRITE,
             [$this, 'CheckToWriteSoftwareBuild'],
             SoftwareBuild::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_CHECK_TO_WRITE,
+            [$this, 'CheckToWriteSoftwareProduct'],
+            SoftwareProduct::class
         );
 
         EventService::RegisterListener(
@@ -155,6 +162,27 @@ class EventListenerPersonal implements iEventServiceSetup {
             }
 
         }
+
+    }
+
+
+    /**
+     * Refuses a platform family on a software product that is not an operating system.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function CheckToWriteSoftwareProduct(EventData $oEventData) {
+
+        /** @var SoftwareProduct $oProduct The object. */
+        $oProduct = $oEventData->Get('object');
+
+        if((string)$oProduct->Get('platform_family') === '' || (string)$oProduct->Get('type') === 'operating_system') {
+            return;
+        }
+
+        $oProduct->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyOnlyForOperatingSystem', $oProduct->GetAsPlainText('type')));
 
     }
 
