@@ -277,8 +277,7 @@
 				</naming>
 				<order>
 					<columns>
-						<attribute id="softwareversion_id"/>
-						<attribute id="build_number"/>
+						<column id="friendlyname" ascending="true"/>
 					</columns>
 				</order>
 				<reconciliation>
