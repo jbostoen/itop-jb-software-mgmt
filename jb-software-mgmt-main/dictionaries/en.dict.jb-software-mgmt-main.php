@@ -191,6 +191,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareProduct/Attribute:platform_family/Value:bsd' => 'BSD',
 	'Class:SoftwareProduct/Attribute:platform_family/Value:bsd+' => 'FreeBSD, OpenBSD, NetBSD and the other BSD systems. Not Linux.',
 	'Class:SoftwareProduct/Attribute:type/Value:language' => 'Language',
+	'Class:Organization/Attribute:softwareproducts_list' => 'Software products',
+	'Class:Organization/Attribute:softwareproducts_list+' => 'The software products that this organization is the vendor of.',
 	'Class:SoftwareProduct/Attribute:softwareversions_list' => 'Versions',
 	'Class:SoftwareProduct/Attribute:softwareversions_list+' => 'Versions',
 	'Class:SoftwareProduct/Attribute:softwareproductexternalidentifiers_list' => 'External identifiers',
