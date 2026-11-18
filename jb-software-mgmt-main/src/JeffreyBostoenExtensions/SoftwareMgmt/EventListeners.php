@@ -167,7 +167,7 @@ class EventListenerPersonal implements iEventServiceSetup {
 
 
     /**
-     * Refuses a platform family on a software product that is not an operating system.
+     * Refuses an operating system without a platform family, and a platform family on a software product that is not an operating system.
      *
      * @param EventData $oEventData
      *
@@ -178,11 +178,15 @@ class EventListenerPersonal implements iEventServiceSetup {
         /** @var SoftwareProduct $oProduct The object. */
         $oProduct = $oEventData->Get('object');
 
-        if((string)$oProduct->Get('platform_family') === '' || (string)$oProduct->Get('type') === 'operating_system') {
-            return;
-        }
+        $bOperatingSystem = ((string)$oProduct->Get('type') === 'operating_system');
+        $bFamily = ((string)$oProduct->Get('platform_family') !== '');
 
-        $oProduct->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyOnlyForOperatingSystem', $oProduct->GetAsPlainText('type')));
+        if($bOperatingSystem && !$bFamily) {
+            $oProduct->AddCheckIssue(Dict::S('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyRequiredForOperatingSystem'));
+        }
+        elseif(!$bOperatingSystem && $bFamily) {
+            $oProduct->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyOnlyForOperatingSystem', $oProduct->GetAsPlainText('type')));
+        }
 
     }
 

@@ -52,6 +52,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareBuild/Attribute:platform_version_friendlyname' => 'Platform version',
 	'Class:SoftwareBuild/Attribute:platform_version_friendlyname+' => '',
 	'JBSoftwareMgmt:SoftwareBuild:PlatformProductOfAnotherFamily' => 'The platform %1$s does not belong to the platform family %2$s.',
+	'JBSoftwareMgmt:SoftwareProduct:PlatformFamilyRequiredForOperatingSystem' => 'An operating system needs a platform family.',
 	'JBSoftwareMgmt:SoftwareProduct:PlatformFamilyOnlyForOperatingSystem' => 'A platform family can only be set on an operating system, not on software of the type %1$s. Clear the platform family or change the type.',
 	'JBSoftwareMgmt:SoftwareBuild:PlatformVersionOfAnotherProduct' => 'The platform version %1$s is not a version of the platform %2$s.',
 	'Class:SoftwareBuild/Attribute:target_hw/Value:x86' => 'x86',

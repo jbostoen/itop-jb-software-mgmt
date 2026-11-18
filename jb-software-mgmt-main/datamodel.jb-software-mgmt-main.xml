@@ -1350,9 +1350,6 @@
 					<default_value/>
 					<is_null_allowed>true</is_null_allowed>
 					<display_style>list</display_style>
-					<dependencies>
-						<attribute id="type"/>
-					</dependencies>
 				</field>
 				<field id="softwareversions_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersion</linked_class>
@@ -1373,44 +1370,6 @@
 					<tag_code_max_len>20</tag_code_max_len>
 				</field>
 			</fields>
-			<methods>
-				<method id="GetInitialStateAttributeFlags">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[
-
-				public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
-
-					// - The platform family is only for an operating system: hidden unless a value still has to be cleared.
-					if($sAttCode === 'platform_family' && $this->Get('type') !== 'operating_system' && (string)$this->Get('platform_family') === '') {
-						return OPT_ATT_HIDDEN;
-					}
-
-					return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-
-				}
-					]]></code>
-				</method>
-				<method id="GetAttributeFlags">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[
-
-				public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-
-					// - The platform family is only for an operating system: hidden unless a value still has to be cleared.
-					if($sAttCode === 'platform_family' && $this->Get('type') !== 'operating_system' && (string)$this->Get('platform_family') === '') {
-						return OPT_ATT_HIDDEN;
-					}
-
-					return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-				}
-					]]></code>
-				</method>
-			</methods>
 			<presentation>
 				<details>
 					<items>
