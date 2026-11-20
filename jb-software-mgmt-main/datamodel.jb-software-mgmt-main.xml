@@ -1277,6 +1277,7 @@
 					<rule id="UniqueSoftwareProduct">
 						<attributes>
 							<attribute id="name"/>
+							<attribute id="vendor_id"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
 					</rule>

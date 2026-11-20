@@ -201,7 +201,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareProduct/Attribute:softwareversions_list+' => 'Versions',
 	'Class:SoftwareProduct/Attribute:softwareproductexternalidentifiers_list' => 'External identifiers',
 	'Class:SoftwareProduct/Attribute:softwareproductexternalidentifiers_list+' => 'Identifiers used to recognize this product in external systems, such as a CPE or a package URL (purl).',
-	'Class:SoftwareProduct/UniquenessRule:UniqueSoftwareProduct' => 'The name of the software must be unique.',
+	'Class:SoftwareProduct/UniquenessRule:UniqueSoftwareProduct' => 'The combination of the name of the software and its vendor must be unique.',
 
 	'Class:SoftwareProductExternalIdentifier' => 'Software Product External Identifier',
 	'Class:SoftwareProductExternalIdentifier+' => 'An identifier used to recognize a software product in an external system, such as a CPE (Common Platform Enumeration) or a package URL (purl). A product can have several identifiers, even of the same type (e.g. an older and a newer CPE naming for the same product).',

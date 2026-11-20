@@ -9,7 +9,7 @@
           <mxGeometry x="40" y="20" width="900" height="30" as="geometry" />
         </mxCell>
 
-        <mxCell id="product" value="&lt;b&gt;SoftwareProduct&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;name * (unique)&lt;br&gt;vendor_id &#45;&gt; Organization&lt;br&gt;type" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="product" value="&lt;b&gt;SoftwareProduct&lt;/b&gt;&lt;hr size=&quot;1&quot;/&gt;name * (unique per vendor)&lt;br&gt;vendor_id &#45;&gt; Organization&lt;br&gt;type" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=6;fontSize=12;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="520" y="80" width="240" height="100" as="geometry" />
         </mxCell>
 
