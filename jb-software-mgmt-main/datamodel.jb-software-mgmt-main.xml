@@ -1259,6 +1259,9 @@
 					<attributes>
 						<attribute id="name"/>
 					</attributes>
+					<complementary_attributes>
+						<attribute id="vendor_id_friendlyname"/>
+					</complementary_attributes>
 				</naming>
 				<order>
 					<columns>
