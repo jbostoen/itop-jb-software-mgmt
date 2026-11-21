@@ -116,7 +116,7 @@ abstract class Helper {
                         }
 
                     // - Check if latest.
-                    //   Builds are grouped by platform and release type: a build is only compared with the builds for the same platform.
+                    //   Builds are grouped by platform, release type and localization: a build is only compared with the builds for the same platform and language.
                     //   Per group, the latest build number is determined; then the builds are marked as latest or outdated.
                     //   Multiple builds of one software version can thus be the latest (one per platform).
 
@@ -175,11 +175,11 @@ abstract class Helper {
     /**
      * @param DBObject $oBuild A software build.
      *
-     * @return string The group in which the build competes for being the latest: its release type and its platform (the operating system and its release).
+     * @return string The group in which the build competes for being the latest: its release type, its platform (the operating system and its release) and its localization (none: language-neutral builds compete with each other only).
      */
     protected static function GetBuildGroup(DBObject $oBuild) : string {
 
-        return sprintf('%1$d|%2$s|%3$d|%4$d', (int)$oBuild->Get('softwarereleasetype_id'), (static::IsPlatformFamily((string)$oBuild->Get('platform_family')) ? (string)$oBuild->Get('platform_family') : ''), (int)$oBuild->Get('platform_product_id'), (int)$oBuild->Get('platform_version_id'));
+        return sprintf('%1$d|%2$s|%3$d|%4$d|%5$d', (int)$oBuild->Get('softwarereleasetype_id'), (static::IsPlatformFamily((string)$oBuild->Get('platform_family')) ? (string)$oBuild->Get('platform_family') : ''), (int)$oBuild->Get('platform_product_id'), (int)$oBuild->Get('platform_version_id'), (int)$oBuild->Get('localization_id'));
 
     }
 

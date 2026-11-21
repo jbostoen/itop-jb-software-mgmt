@@ -298,6 +298,7 @@
 							<attribute id="platform_family"/>
 							<attribute id="platform_product_id"/>
 							<attribute id="platform_version_id"/>
+							<attribute id="localization_id"/>
 							<attribute id="softwarereleasetype_id"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
@@ -401,6 +402,17 @@
 				</field>
 				<field id="platform_version_friendlyname" xsi:type="AttributeExternalField">
 					<extkey_attcode>platform_version_id</extkey_attcode>
+					<target_attcode>friendlyname</target_attcode>
+				</field>
+				<field id="localization_id" xsi:type="AttributeExternalKey">
+					<sql>localization_id</sql>
+					<is_null_allowed>true</is_null_allowed>
+					<on_target_delete>DEL_MANUAL</on_target_delete>
+					<target_class>Localization</target_class>
+					<allow_target_creation>false</allow_target_creation>
+				</field>
+				<field id="localization_id_friendlyname" xsi:type="AttributeExternalField">
+					<extkey_attcode>localization_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
 				<field id="softwarereleasetype_id" xsi:type="AttributeExternalKey">
@@ -534,6 +546,9 @@
 						<item id="platform_version_id">
 							<rank>25</rank>
 						</item>
+						<item id="localization_id">
+							<rank>26</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -574,6 +589,9 @@
 						<item id="platform_version_id">
 							<rank>25</rank>
 						</item>
+						<item id="localization_id">
+							<rank>26</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -608,6 +626,9 @@
 						<item id="platform_version_id">
 							<rank>25</rank>
 						</item>
+						<item id="localization_id">
+							<rank>26</rank>
+						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
 						</item>
@@ -641,6 +662,9 @@
 						</item>
 						<item id="platform_version_id">
 							<rank>25</rank>
+						</item>
+						<item id="localization_id">
+							<rank>26</rank>
 						</item>
 						<item id="softwarereleasetype_id">
 							<rank>31</rank>
