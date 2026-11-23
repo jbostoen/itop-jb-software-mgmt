@@ -158,7 +158,7 @@ class EventListenerPersonal implements iEventServiceSetup {
             $oProduct = MetaModel::GetObject('SoftwareProduct', $iProductId, false, true);
 
             if($oProduct !== null && (string)$oProduct->Get('platform_family') !== '' && (string)$oProduct->Get('platform_family') !== (string)$oBuild->Get('platform_family')) {
-                $oBuild->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareBuild:PlatformProductOfAnotherFamily', $oProduct->GetName(), $oBuild->GetAsPlainText('platform_family')));
+                $oBuild->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareBuild:PlatformProductOfAnotherFamily', $oProduct->GetName(), MetaModel::GetAttributeDef(get_class($oBuild), 'platform_family')->GetAsPlainText($oBuild->Get('platform_family'))));
             }
 
         }
@@ -185,7 +185,7 @@ class EventListenerPersonal implements iEventServiceSetup {
             $oProduct->AddCheckIssue(Dict::S('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyRequiredForOperatingSystem'));
         }
         elseif(!$bOperatingSystem && $bFamily) {
-            $oProduct->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyOnlyForOperatingSystem', $oProduct->GetAsPlainText('type')));
+            $oProduct->AddCheckIssue(Dict::Format('JBSoftwareMgmt:SoftwareProduct:PlatformFamilyOnlyForOperatingSystem', MetaModel::GetAttributeDef(get_class($oProduct), 'type')->GetAsPlainText($oProduct->Get('type'))));
         }
 
     }
