@@ -66,9 +66,21 @@ class EventListenerPersonal implements iEventServiceSetup {
         );
 
         EventService::RegisterListener(
+            EVENT_DB_COMPUTE_VALUES,
+            [$this, 'ComputeValuesSoftwareVersion'],
+            SoftwareVersion::class
+        );
+
+        EventService::RegisterListener(
             EVENT_DB_AFTER_WRITE,
             [$this, 'AfterWriteSoftwareVersion'],
             SoftwareVersion::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_AFTER_WRITE,
+            [$this, 'AfterWriteSoftwareProduct'],
+            SoftwareProduct::class
         );
 
         EventService::RegisterListener(
@@ -315,6 +327,72 @@ class EventListenerPersonal implements iEventServiceSetup {
 
 
     }
+
+    /**
+     * A version of a discontinued software product is not maintained, whatever its lifecycle events say.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function ComputeValuesSoftwareVersion(EventData $oEventData) {
+
+        /** @var SoftwareVersion $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        if((string)$oObj->Get('is_maintained') === 'no' || (int)$oObj->Get('softwareproduct_id') <= 0) {
+            return;
+        }
+
+        $oProduct = MetaModel::GetObject('SoftwareProduct', (int)$oObj->Get('softwareproduct_id'), false, true);
+
+        if($oProduct !== null && (string)$oProduct->Get('status') === 'discontinued') {
+            $oObj->Set('is_maintained', 'no');
+        }
+
+    }
+
+
+    /**
+     * After the status of a software product is changed, recompute the "is_maintained" flag and the status of its versions and builds: the versions of a
+     * discontinued product are not maintained and unsupported; the lifecycle events decide again when it is not discontinued anymore.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function AfterWriteSoftwareProduct(EventData $oEventData) {
+
+        /** @var SoftwareProduct $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        if(!array_key_exists('status', $oObj->ListPreviousValuesForUpdatedAttributes())) {
+            return;
+        }
+
+        $oSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareVersion WHERE softwareproduct_id = :softwareproduct_id'), [], [
+            'softwareproduct_id' => $oObj->GetKey(),
+        ]);
+        $oSet->OptimizeColumnLoad(['SoftwareVersion' => ['softwareproduct_id']]);
+
+        $aVersionIds = [];
+
+        while($oVersion = $oSet->Fetch()) {
+            $aVersionIds[] = (int)$oVersion->GetKey();
+        }
+
+        if(count($aVersionIds) === 0) {
+            return;
+        }
+
+        Helper::Trace('Update the lifecycle flags and the status due to a changed status of the software product.');
+
+        Helper::UpdateIsMaintained($aVersionIds);
+        Helper::UpdateStatusOfSoftwareVersions([(int)$oObj->GetKey()]);
+        Helper::UpdateStatusOfSoftwareBuilds([(int)$oObj->GetKey()], []);
+
+    }
+
 
     /**
      * After a software version is saved, recompute the status of the versions of its software.

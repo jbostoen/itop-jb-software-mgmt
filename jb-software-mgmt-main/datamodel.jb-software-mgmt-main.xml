@@ -1395,6 +1395,23 @@
 					<is_null_allowed>true</is_null_allowed>
 					<display_style>list</display_style>
 				</field>
+				<field id="status" xsi:type="AttributeEnum">
+					<sql>status</sql>
+					<values>
+						<value id="active">
+							<code>active</code>
+						</value>
+						<value id="discontinued">
+							<code>discontinued</code>
+						</value>
+						<value id="unknown">
+							<code>unknown</code>
+						</value>
+					</values>
+					<default_value>unknown</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="softwareversions_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareVersion</linked_class>
 					<ext_key_to_me>softwareproduct_id</ext_key_to_me>
@@ -1433,6 +1450,9 @@
 										<item id="type">
 											<rank>21</rank>
 										</item>
+										<item id="status">
+											<rank>23</rank>
+										</item>
 										<item id="tags">
 											<rank>801</rank>
 										</item>
@@ -1467,6 +1487,9 @@
 						<item id="platform_family">
 							<rank>22</rank>
 						</item>
+						<item id="status">
+							<rank>23</rank>
+						</item>
 					</items>
 				</search>
 				<default_search>
@@ -1483,6 +1506,9 @@
 						<item id="platform_family">
 							<rank>22</rank>
 						</item>
+						<item id="status">
+							<rank>23</rank>
+						</item>
 					</items>
 				</default_search>
 				<list>
@@ -1498,6 +1524,9 @@
 						</item>
 						<item id="platform_family">
 							<rank>22</rank>
+						</item>
+						<item id="status">
+							<rank>23</rank>
 						</item>
 					</items>
 				</list>

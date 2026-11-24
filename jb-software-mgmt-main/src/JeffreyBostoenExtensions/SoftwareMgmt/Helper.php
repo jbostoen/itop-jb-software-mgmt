@@ -72,6 +72,9 @@ abstract class Helper {
 
                 Helper::Trace('Product: %1$s', $oProduct->Get('friendlyname'));
 
+                // - The builds of a discontinued product are unsupported.
+                $bDiscontinued = ($oProduct->Get('status') === 'discontinued');
+
                 $oFilterVersions = DBObjectSearch::FromOQL_AllData('
                     SELECT SoftwareVersion 
                     WHERE 
@@ -100,9 +103,9 @@ abstract class Helper {
 
                     // - Check if EOL.
                         
-                        if($oVersion->Get('end_of_life_date') !== null && $oVersion->Get('end_of_life_date') !== '' && strtotime('now') > strtotime($oVersion->Get('end_of_life_date'))) {
+                        if($bDiscontinued || ($oVersion->Get('end_of_life_date') !== null && $oVersion->Get('end_of_life_date') !== '' && strtotime('now') > strtotime($oVersion->Get('end_of_life_date')))) {
 
-                            Helper::Trace('Version is EOL.');
+                            Helper::Trace('Version is EOL or its product is discontinued.');
 
                             while($oBuild = $oSetBuilds->Fetch()) {
 
@@ -480,6 +483,12 @@ abstract class Helper {
 
         }
 
+        // - A discontinued product has no maintained versions, whatever the lifecycle events say.
+        foreach(static::GetVersionIdsOfDiscontinuedProducts($aVersionIds) as $iVersionId) {
+            $aWithEvents[$iVersionId] = true;
+            $aEnded[$iVersionId] = true;
+        }
+
         static::SetIsMaintained(array_keys($aEnded), 'no');
         static::SetIsMaintained(array_keys(array_diff_key($aWithEvents, $aEnded)), 'yes');
 
@@ -502,6 +511,32 @@ abstract class Helper {
                 }
 
             }
+
+    }
+
+    /**
+     * @param int[] $aVersionIds Optional. The version IDs to check. If empty, all versions will be checked.
+     *
+     * @return int[] The IDs of the versions (among the given ones) of the software products that are discontinued.
+     */
+    public static function GetVersionIdsOfDiscontinuedProducts(array $aVersionIds) : array {
+
+        $oSearch = DBObjectSearch::FromOQL_AllData("SELECT SoftwareVersion AS sv JOIN SoftwareProduct AS sp ON sv.softwareproduct_id = sp.id WHERE sp.status = 'discontinued'");
+
+        if(count($aVersionIds) > 0) {
+            $oSearch->AddCondition('id', $aVersionIds, 'IN');
+        }
+
+        $oSet = new DBObjectSet($oSearch);
+        $oSet->OptimizeColumnLoad(['sv' => ['softwareproduct_id']]);
+
+        $aIds = [];
+
+        while($oVersion = $oSet->Fetch()) {
+            $aIds[] = (int)$oVersion->GetKey();
+        }
+
+        return $aIds;
 
     }
 
