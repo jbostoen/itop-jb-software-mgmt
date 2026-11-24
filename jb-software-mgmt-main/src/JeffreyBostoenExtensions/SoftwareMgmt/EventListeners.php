@@ -67,6 +67,18 @@ class EventListenerPersonal implements iEventServiceSetup {
 
         EventService::RegisterListener(
             EVENT_DB_AFTER_WRITE,
+            [$this, 'AfterWriteSoftwareVersion'],
+            SoftwareVersion::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_AFTER_DELETE,
+            [$this, 'AfterDeleteSoftwareVersion'],
+            SoftwareVersion::class
+        );
+
+        EventService::RegisterListener(
+            EVENT_DB_AFTER_WRITE,
             [$this, 'AfterWriteLifecycleEvent'],
             SoftwareVersionLifecycleEvent::class
         );
@@ -303,6 +315,57 @@ class EventListenerPersonal implements iEventServiceSetup {
 
 
     }
+
+    /**
+     * After a software version is saved, recompute the status of the versions of its software.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function AfterWriteSoftwareVersion(EventData $oEventData) {
+
+        /** @var SoftwareVersion $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        $aPrevious = $oObj->ListPreviousValuesForUpdatedAttributes();
+
+        // - A change of something else (the status itself, tags, ...) does not influence the status of the versions.
+        if(count($aPrevious) > 0 && count(array_intersect_key($aPrevious, array_flip(['softwareproduct_id', 'softwarecomponent_id', 'edition', 'version', 'end_of_life_date', 'is_maintained']))) === 0) {
+            return;
+        }
+
+        Helper::Trace('Update the status of the software versions due to a saved software version.');
+
+        $aProductIds = array_values(array_unique(array_filter([(int)$oObj->Get('softwareproduct_id'), (int)($aPrevious['softwareproduct_id'] ?? 0)])));
+
+        // - With re-entrance protection active; it would not correctly update its own status.
+
+            MetaModel::StopReentranceProtection($oObj);
+            Helper::UpdateStatusOfSoftwareVersions($aProductIds);
+            MetaModel::StartReentranceProtection($oObj);
+
+    }
+
+
+    /**
+     * After a software version is deleted, recompute the status of the versions of its software: another version may have become the latest.
+     *
+     * @param EventData $oEventData
+     *
+     * @return void
+     */
+    public function AfterDeleteSoftwareVersion(EventData $oEventData) {
+
+        /** @var SoftwareVersion $oObj The object. */
+        $oObj = $oEventData->Get('object');
+
+        Helper::Trace('Update the status of the software versions due to a deleted software version.');
+
+        Helper::UpdateStatusOfSoftwareVersions([(int)$oObj->Get('softwareproduct_id')]);
+
+    }
+
 
     /**
      * After a lifecycle event is saved, keep the "is_maintained" flag and the end-of-life date of the software version(s) in line.

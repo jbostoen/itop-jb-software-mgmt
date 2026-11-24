@@ -476,6 +476,10 @@
 					<extkey_attcode>softwareversion_id</extkey_attcode>
 					<target_attcode>friendlyname</target_attcode>
 				</field>
+				<field id="softwareversion_status" xsi:type="AttributeExternalField">
+					<extkey_attcode>softwareversion_id</extkey_attcode>
+					<target_attcode>status</target_attcode>
+				</field>
 				<field id="softwareinstallations_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareInstallation</linked_class>
 					<ext_key_to_me>softwarebuild_id</ext_key_to_me>
@@ -558,6 +562,9 @@
 						<item id="status">
 							<rank>61</rank>
 						</item>
+						<item id="softwareversion_status">
+							<rank>62</rank>
+						</item>
 						<item id="tags">
 							<rank>801</rank>
 						</item>
@@ -601,6 +608,9 @@
 						<item id="status">
 							<rank>61</rank>
 						</item>
+						<item id="softwareversion_status">
+							<rank>62</rank>
+						</item>
 						<item id="tags">
 							<rank>801</rank>
 						</item>>
@@ -638,6 +648,9 @@
 						<item id="status">
 							<rank>61</rank>
 						</item>
+						<item id="softwareversion_status">
+							<rank>62</rank>
+						</item>
 						<item id="tags">
 							<rank>801</rank>
 						</item>
@@ -674,6 +687,9 @@
 						</item>
 						<item id="status">
 							<rank>61</rank>
+						</item>
+						<item id="softwareversion_status">
+							<rank>62</rank>
 						</item>
 						<item id="tags">
 							<rank>801</rank>
@@ -2163,6 +2179,46 @@
 					<is_null_allowed>false</is_null_allowed>
 					<display_style>list</display_style>
 				</field>
+				<field id="status" xsi:type="AttributeEnum">
+					<sql>status</sql>
+					<values>
+						<value id="latest">
+							<code>latest</code>
+							<style>
+								<main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-check-circle</decoration_classes>
+							</style>
+						</value>
+						<value id="maintained">
+							<code>maintained</code>
+							<style>
+								<main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-shield-alt</decoration_classes>
+							</style>
+						</value>
+						<value id="unsupported">
+							<code>unsupported</code>
+							<style>
+								<main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-times-circle</decoration_classes>
+							</style>
+						</value>
+						<value id="unknown">
+							<code>unknown</code>
+							<style>
+								<main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-question-circle</decoration_classes>
+							</style>
+						</value>
+					</values>
+					<default_value>unknown</default_value>
+					<is_null_allowed>false</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="softwarebuilds_list" xsi:type="AttributeLinkedSet">
 					<linked_class>SoftwareBuild</linked_class>
 					<ext_key_to_me>softwareversion_id</ext_key_to_me>
@@ -2218,7 +2274,7 @@
 
 				public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
 
-					if($sAttCode === 'is_maintained') {
+					if($sAttCode === 'is_maintained' || $sAttCode === 'status') {
 						return OPT_ATT_READONLY;
 					}
 
@@ -2235,7 +2291,7 @@
 
 				public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 
-					if($sAttCode === 'is_maintained') {
+					if($sAttCode === 'is_maintained' || $sAttCode === 'status') {
 						return OPT_ATT_READONLY;
 					}
 
@@ -2277,6 +2333,9 @@
 						</item>
 						<item id="is_latest">
 							<rank>73</rank>
+						</item>
+						<item id="status">
+							<rank>74</rank>
 						</item>
 						<item id="tags">
 							<rank>801</rank>
@@ -2327,6 +2386,9 @@
 						<item id="is_latest">
 							<rank>34</rank>
 						</item>
+						<item id="status">
+							<rank>35</rank>
+						</item>
 					</items>
 				</search>
 				<default_search>
@@ -2373,6 +2435,9 @@
 						</item>
 						<item id="is_latest">
 							<rank>34</rank>
+						</item>
+						<item id="status">
+							<rank>35</rank>
 						</item>
 					</items>
 				</list>

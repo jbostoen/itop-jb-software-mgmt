@@ -59,6 +59,9 @@ class ScheduledTask implements iScheduledProcess {
 
 			// - The "is_maintained" flag changes when a date passes.
 				Helper::UpdateIsMaintained([]);
+
+				// - The status of a software version changes when a date passes or the "is_maintained" flag changes.
+					Helper::UpdateStatusOfSoftwareVersions([]);
 			
 		}
 		catch(Exception $e) {

@@ -231,6 +231,187 @@ abstract class Helper {
 
 
     /**
+     * Recomputes "status" of software versions.
+     *
+     * Software versions are compared with their siblings: the versions of the same software product with the same software component and edition.
+     * Only the version number differs.
+     *
+     * - unsupported: the end-of-life date has passed, or "is_maintained" is no.
+     * - latest: the highest version of the siblings.
+     * - maintained: a newer sibling exists, but the version is still maintained.
+     * - unknown: not determinable. A sibling has no comparable version number, or a newer sibling exists and "is_maintained" is unknown.
+     *
+     * "is_latest" and "is_maintained" are not used as an outcome; "is_maintained" is only read.
+     * Only versions of which the value changes are updated.
+     *
+     * @param int[] $aTargetProductIds Optional. The product IDs to check. If empty, all products will be checked.
+     *
+     * @return void
+     */
+    public static function UpdateStatusOfSoftwareVersions(array $aTargetProductIds) : void {
+
+        $sToday = date('Y-m-d');
+
+        $oSearch = DBObjectSearch::FromOQL_AllData('SELECT SoftwareVersion');
+
+        if(count($aTargetProductIds) > 0) {
+            $oSearch->AddCondition('softwareproduct_id', $aTargetProductIds, 'IN');
+        }
+
+        $oSet = new DBObjectSet($oSearch);
+        $oSet->OptimizeColumnLoad(['SoftwareVersion' => ['softwareproduct_id', 'softwarecomponent_id', 'edition', 'version', 'end_of_life_date', 'is_maintained', 'status']]);
+
+        // - Only scalar values are kept: the siblings are compared in memory.
+
+            /** @var array[] $aSiblingSets Sibling key => list of [ID, version, end-of-life date, is_maintained, status]. */
+            $aSiblingSets = [];
+
+            while($oVersion = $oSet->Fetch()) {
+
+                $sKey = sprintf('%1$d|%2$d|%3$s', (int)$oVersion->Get('softwareproduct_id'), (int)$oVersion->Get('softwarecomponent_id'), strtolower(trim((string)$oVersion->Get('edition'))));
+
+                $aSiblingSets[$sKey][] = [
+                    (int)$oVersion->GetKey(),
+                    (string)$oVersion->Get('version'),
+                    (string)$oVersion->Get('end_of_life_date'),
+                    (string)$oVersion->Get('is_maintained'),
+                    (string)$oVersion->Get('status'),
+                ];
+
+            }
+
+        // - Compute the new values.
+
+            /** @var int[][] $aChanges New status => version IDs that change to it. */
+            $aChanges = [];
+
+            foreach($aSiblingSets as $aSiblings) {
+
+                $aNumbers = [];
+                $bComparable = true;
+
+                foreach($aSiblings as [$iId, $sVersion]) {
+
+                    $aParsed = static::ParseVersionNumber($sVersion);
+
+                    if($aParsed === null) {
+                        $bComparable = false;
+                        break;
+                    }
+
+                    $aNumbers[$iId] = $aParsed;
+
+                }
+
+                $aNewest = null;
+
+                if($bComparable) {
+
+                    foreach($aNumbers as $aParsed) {
+
+                        if($aNewest === null || static::CompareVersionNumbers($aParsed, $aNewest) > 0) {
+                            $aNewest = $aParsed;
+                        }
+
+                    }
+
+                }
+
+                foreach($aSiblings as [$iId, $sVersion, $sEndOfLifeDate, $sIsMaintained, $sStatus]) {
+
+                    if(($sEndOfLifeDate !== '' && $sEndOfLifeDate <= $sToday) || $sIsMaintained === 'no') {
+                        $sNewStatus = 'unsupported';
+                    }
+                    elseif(count($aSiblings) === 1) {
+                        $sNewStatus = 'latest';
+                    }
+                    elseif($aNewest === null) {
+                        $sNewStatus = 'unknown';
+                    }
+                    elseif(static::CompareVersionNumbers($aNumbers[$iId], $aNewest) === 0) {
+                        $sNewStatus = 'latest';
+                    }
+                    elseif($sIsMaintained === 'yes') {
+                        $sNewStatus = 'maintained';
+                    }
+                    else {
+                        $sNewStatus = 'unknown';
+                    }
+
+                    if($sNewStatus !== $sStatus) {
+                        $aChanges[$sNewStatus][] = $iId;
+                    }
+
+                }
+
+            }
+
+        // - Write what changed.
+
+            foreach($aChanges as $sNewStatus => $aVersionIds) {
+
+                foreach(array_chunk($aVersionIds, 500) as $aChunk) {
+
+                    $oSetChanged = new DBObjectSet(DBObjectSearch::FromOQL_AllData('SELECT SoftwareVersion WHERE id IN (:ids)'), [], [
+                        'ids' => $aChunk,
+                    ]);
+
+                    while($oVersion = $oSetChanged->Fetch()) {
+                        $oVersion->Set('status', $sNewStatus);
+                        $oVersion->DBUpdate();
+                    }
+
+                }
+
+            }
+
+    }
+
+
+    /**
+     * @param string $sVersion The version of a software version.
+     *
+     * @return int[]|null The numbers of the version ("1.2.9" gives 1, 2 and 9; a leading "v" is ignored), or null when it is not made of numbers separated by dots.
+     */
+    protected static function ParseVersionNumber(string $sVersion) : ?array {
+
+        $sVersion = ltrim(trim($sVersion), 'vV');
+
+        if(preg_match('/^\d+(\.\d+)*$/', $sVersion) !== 1) {
+            return null;
+        }
+
+        return array_map('intval', explode('.', $sVersion));
+
+    }
+
+
+    /**
+     * @param int[] $aNumbersA The numbers of a version.
+     * @param int[] $aNumbersB The numbers of another version.
+     *
+     * @return int Negative when A is older than B, 0 when equal ("1.0" equals "1.0.0"), positive when A is newer.
+     */
+    protected static function CompareVersionNumbers(array $aNumbersA, array $aNumbersB) : int {
+
+        $iCount = max(count($aNumbersA), count($aNumbersB));
+
+        for($i = 0; $i < $iCount; $i++) {
+
+            $iDifference = ($aNumbersA[$i] ?? 0) <=> ($aNumbersB[$i] ?? 0);
+
+            if($iDifference !== 0) {
+                return $iDifference;
+            }
+
+        }
+
+        return 0;
+
+    }
+
+
+    /**
      * Recomputes "is_maintained" of software versions, based on their lifecycle events.
      *
      * - no: an "end of security support" event exists that is dated today or in the past, or has no date.
