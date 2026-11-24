@@ -241,6 +241,8 @@ abstract class Helper {
      * - maintained: a newer sibling exists, but the version is still maintained.
      * - unknown: not determinable. A sibling has no comparable version number, or a newer sibling exists and "is_maintained" is unknown.
      *
+     * A pre-release version (beta, rc, ...) is left out of the comparison: it is unknown (or unsupported) itself and does not influence the others.
+     *
      * "is_latest" and "is_maintained" are not used as an outcome; "is_maintained" is only read.
      * Only versions of which the value changes are updated.
      *
@@ -287,10 +289,13 @@ abstract class Helper {
 
             foreach($aSiblingSets as $aSiblings) {
 
+                // - A pre-release (beta, release candidate, ...) is left out of the comparison: it is not the newest version, and it does not keep the others from being compared.
+                    $aStable = array_filter($aSiblings, fn(array $aSibling) => !static::IsPreRelease($aSibling[1]));
+
                 $aNumbers = [];
                 $bComparable = true;
 
-                foreach($aSiblings as [$iId, $sVersion]) {
+                foreach($aStable as [$iId, $sVersion]) {
 
                     $aParsed = static::ParseVersionNumber($sVersion);
 
@@ -322,7 +327,10 @@ abstract class Helper {
                     if(($sEndOfLifeDate !== '' && $sEndOfLifeDate <= $sToday) || $sIsMaintained === 'no') {
                         $sNewStatus = 'unsupported';
                     }
-                    elseif(count($aSiblings) === 1) {
+                    elseif(static::IsPreRelease($sVersion)) {
+                        $sNewStatus = 'unknown';
+                    }
+                    elseif(count($aStable) === 1) {
                         $sNewStatus = 'latest';
                     }
                     elseif($aNewest === null) {
@@ -364,6 +372,18 @@ abstract class Helper {
                 }
 
             }
+
+    }
+
+
+    /**
+     * @param string $sVersion The version of a software version.
+     *
+     * @return bool Whether it names a pre-release: alpha, beta, rc, pre, preview, dev, snapshot, nightly or canary as a word or followed by a number ("2.0-beta1", "3.1rc2"). Not "Developer".
+     */
+    protected static function IsPreRelease(string $sVersion) : bool {
+
+        return preg_match('/(?<![a-z])(alpha|beta|rc|pre|preview|dev|snapshot|nightly|canary)(?![a-z])/i', $sVersion) === 1;
 
     }
 
