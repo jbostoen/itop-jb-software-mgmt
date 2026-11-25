@@ -1555,6 +1555,7 @@
 					<attributes>
 						<attribute id="softwareproduct_id"/>
 						<attribute id="type"/>
+						<attribute id="platform_family"/>
 						<attribute id="value"/>
 					</attributes>
 				</reconciliation>
@@ -1566,6 +1567,7 @@
 						<attributes>
 							<attribute id="softwareproduct_id"/>
 							<attribute id="type"/>
+							<attribute id="platform_family"/>
 							<attribute id="value"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
@@ -1596,6 +1598,36 @@
 					<is_null_allowed>false</is_null_allowed>
 					<display_style>list</display_style>
 				</field>
+				<field id="platform_family" xsi:type="AttributeEnum">
+					<sort_type>label</sort_type>
+					<values>
+						<value id="windows">
+							<code>windows</code>
+						</value>
+						<value id="linux">
+							<code>linux</code>
+						</value>
+						<value id="macos">
+							<code>macos</code>
+						</value>
+						<value id="ios">
+							<code>ios</code>
+						</value>
+						<value id="android">
+							<code>android</code>
+						</value>
+						<value id="chromeos">
+							<code>chromeos</code>
+						</value>
+						<value id="bsd">
+							<code>bsd</code>
+						</value>
+					</values>
+					<sql>platform_family</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="value" xsi:type="AttributeString">
 					<sql>value</sql>
 					<default_value/>
@@ -1612,6 +1644,9 @@
 						<item id="type">
 							<rank>11</rank>
 						</item>
+						<item id="platform_family">
+							<rank>12</rank>
+						</item>
 						<item id="value">
 							<rank>21</rank>
 						</item>
@@ -1624,6 +1659,9 @@
 						</item>
 						<item id="type">
 							<rank>11</rank>
+						</item>
+						<item id="platform_family">
+							<rank>12</rank>
 						</item>
 						<item id="value">
 							<rank>21</rank>
@@ -1647,6 +1685,9 @@
 						</item>
 						<item id="type">
 							<rank>11</rank>
+						</item>
+						<item id="platform_family">
+							<rank>12</rank>
 						</item>
 						<item id="value">
 							<rank>21</rank>
@@ -2630,6 +2671,7 @@
 					<attributes>
 						<attribute id="softwareversion_id"/>
 						<attribute id="type"/>
+						<attribute id="platform_family"/>
 						<attribute id="value"/>
 					</attributes>
 				</reconciliation>
@@ -2641,6 +2683,7 @@
 						<attributes>
 							<attribute id="softwareversion_id"/>
 							<attribute id="type"/>
+							<attribute id="platform_family"/>
 							<attribute id="value"/>
 						</attributes>
 						<is_blocking>true</is_blocking>
@@ -2674,6 +2717,36 @@
 					<is_null_allowed>false</is_null_allowed>
 					<display_style>list</display_style>
 				</field>
+				<field id="platform_family" xsi:type="AttributeEnum">
+					<sort_type>label</sort_type>
+					<values>
+						<value id="windows">
+							<code>windows</code>
+						</value>
+						<value id="linux">
+							<code>linux</code>
+						</value>
+						<value id="macos">
+							<code>macos</code>
+						</value>
+						<value id="ios">
+							<code>ios</code>
+						</value>
+						<value id="android">
+							<code>android</code>
+						</value>
+						<value id="chromeos">
+							<code>chromeos</code>
+						</value>
+						<value id="bsd">
+							<code>bsd</code>
+						</value>
+					</values>
+					<sql>platform_family</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+					<display_style>list</display_style>
+				</field>
 				<field id="value" xsi:type="AttributeString">
 					<sql>value</sql>
 					<default_value/>
@@ -2690,6 +2763,9 @@
 						<item id="type">
 							<rank>11</rank>
 						</item>
+						<item id="platform_family">
+							<rank>12</rank>
+						</item>
 						<item id="value">
 							<rank>21</rank>
 						</item>
@@ -2702,6 +2778,9 @@
 						</item>
 						<item id="type">
 							<rank>11</rank>
+						</item>
+						<item id="platform_family">
+							<rank>12</rank>
 						</item>
 						<item id="value">
 							<rank>21</rank>
@@ -2725,6 +2804,9 @@
 						</item>
 						<item id="type">
 							<rank>11</rank>
+						</item>
+						<item id="platform_family">
+							<rank>12</rank>
 						</item>
 						<item id="value">
 							<rank>21</rank>
